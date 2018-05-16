@@ -1,7 +1,6 @@
 package com.example.carlos.tabproject1;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
@@ -19,11 +18,11 @@ import java.util.ArrayList;
  */
 
 public class tabAdapter extends RecyclerView.Adapter<tabAdapter.ViewHolder> {
+    int p;
    private ArrayList<TODO> todoArrayList;
    private Context context;
    private LayoutInflater layoutInflater;
    private TODO todo;
-   int p;
 
    tabAdapter(ArrayList todo){
         todoArrayList = todo;
@@ -58,8 +57,11 @@ public class tabAdapter extends RecyclerView.Adapter<tabAdapter.ViewHolder> {
                 if(holder.checkBox.isChecked()){
                     CheckBox cb   = (CheckBox) buttonView;
                     TODO todo2 = (TODO) cb.getTag();
-                    todo2.getEditable(cb.isChecked());
-                    todoArrayList.get(position).getEditable(cb.isChecked());
+                    //todo2.getEditable(cb.isChecked());
+                    todo2.getEditable(isChecked);
+                    //todoArrayList.get(position).getEditable(cb.isChecked());
+                    todoArrayList.get(position).getEditable(isChecked);
+                    holder.checkBox.setChecked(isChecked);
 
                 }
             }
@@ -92,13 +94,14 @@ public class tabAdapter extends RecyclerView.Adapter<tabAdapter.ViewHolder> {
         return todoArrayList.size();
     }
 
-
-
+    void removeItem(TODO todo) {
+        todoArrayList.remove(todo);
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        CheckBox checkBox;
        //implement click listener
         private TextView nameTV,noteTV;
-         CheckBox checkBox;
         private Context context;
         private TODO mTODO;
         private tabAdapter adapter;
@@ -120,9 +123,5 @@ public class tabAdapter extends RecyclerView.Adapter<tabAdapter.ViewHolder> {
             noteTV.setText(todo.getNote());
             mTODO = todo;
         }
-    }
-
-    void removeItem(TODO todo){
-        todoArrayList.remove(todo);
     }
 }

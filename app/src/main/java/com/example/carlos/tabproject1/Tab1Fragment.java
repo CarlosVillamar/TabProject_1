@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 
@@ -80,6 +79,7 @@ public class Tab1Fragment extends Fragment {
                 if (todoArrayList.size() >= 1) {
                     //todoArrayList.remove(todoArrayList.size() - 1);
                        // checkBox.isSelected();
+                    checkBox.setOnCheckedChangeListener((CompoundButton.OnCheckedChangeListener) this);
                     checkBox.getTag();
                     todoArrayList.remove(checkBox.isChecked());
                     adapter.notifyDataSetChanged();
