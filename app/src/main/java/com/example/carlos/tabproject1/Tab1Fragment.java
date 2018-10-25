@@ -15,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -24,6 +25,7 @@ import java.util.ArrayList;
  */
 public class Tab1Fragment extends Fragment {
     DatabaseReference databaseReference;
+    FirebaseDatabase firebaseDatabase;
     ArrayList<TODO> todoArrayList;
     CheckBox checkBox;
     tabAdapter adapter;
@@ -55,6 +57,8 @@ public class Tab1Fragment extends Fragment {
         adapter = new tabAdapter(getContext(), todoArrayList);
         recyclerView.setAdapter(adapter);
 
+        firebaseDatabase = FirebaseDatabase.getInstance();
+
         initializeData();
         return v;
     }
@@ -77,8 +81,8 @@ public class Tab1Fragment extends Fragment {
                 break;
             case R.id.menuDelete:
                 if (todoArrayList.size() >= 1) {
-                    //todoArrayList.remove(todoArrayList.size() - 1);
-                       // checkBox.isSelected();
+                    todoArrayList.remove(todoArrayList.size() - 1);
+                        checkBox.isSelected();
                     checkBox.setOnCheckedChangeListener((CompoundButton.OnCheckedChangeListener) this);
                     checkBox.getTag();
                     todoArrayList.remove(checkBox.isChecked());

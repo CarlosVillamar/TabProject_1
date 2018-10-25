@@ -22,6 +22,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,12 +46,15 @@ public class MainActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
     private Toolbar toolbar;
+    private FirebaseDatabase fireDB;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        fireDB = FirebaseDatabase.getInstance();
 
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
