@@ -195,8 +195,10 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.menuDelete:
                    // Toast.makeText(getContext(), "deleteeMEHHHHH", Toast.LENGTH_SHORT).show();
-                    if (todoArrayList.size()>=1){
-                    todoArrayList.remove(todoArrayList.size()-1);
+                    if (todoArrayList.size()>=0){
+//                    todoArrayList.remove(todoArrayList.size()-1);
+
+                    adapter.removeItem( todoArrayList.remove(2));
                     adapter.notifyDataSetChanged();
                     }else {
                         break;

@@ -82,10 +82,10 @@ public class Tab1Fragment extends Fragment {
             case R.id.menuDelete:
                 if (todoArrayList.size() >= 1) {
                     todoArrayList.remove(todoArrayList.size() - 1);
-                        checkBox.isSelected();
-                    checkBox.setOnCheckedChangeListener((CompoundButton.OnCheckedChangeListener) this);
-                    checkBox.getTag();
-                    todoArrayList.remove(checkBox.isChecked());
+//                        checkBox.isSelected();
+//                    checkBox.setOnCheckedChangeListener((CompoundButton.OnCheckedChangeListener) this);
+//                    checkBox.getTag();
+//                    todoArrayList.remove();
                     adapter.notifyDataSetChanged();
                 } else {
                     break;

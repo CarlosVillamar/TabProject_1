@@ -40,7 +40,7 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
         notesEditText.setOnKeyListener(this);
 
 
-        //ArrayList<TODO> mtodoArrayList = (ArrayList<TODO>) intent.getSerializableExtra("newTODO");
+       //ArrayList<TODO> mtodoArrayList = (ArrayList<TODO>) Intent.getSerializableExtra("newTODO");
 
     }
 
