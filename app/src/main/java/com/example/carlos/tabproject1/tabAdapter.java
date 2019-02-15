@@ -27,6 +27,7 @@ public class tabAdapter extends RecyclerView.Adapter<tabAdapter.ViewHolder> {
     private TODO todo;
 
     tabAdapter(List todo) {
+        context.getApplicationContext();
         todoList = todo;
     }
 

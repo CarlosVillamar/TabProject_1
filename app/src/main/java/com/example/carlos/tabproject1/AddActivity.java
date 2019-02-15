@@ -15,6 +15,9 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 
 public class AddActivity extends AppCompatActivity implements View.OnKeyListener, TextWatcher {
@@ -22,6 +25,7 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
     TODO todo;
     EditText nameEditText, notesEditText;
     CheckBox checkBox;
+    DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +42,8 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
 
         nameEditText.setOnKeyListener(this);
         notesEditText.setOnKeyListener(this);
+        databaseReference = FirebaseDatabase.getInstance().getReference();
 
-
-       //ArrayList<TODO> mtodoArrayList = (ArrayList<TODO>) Intent.getSerializableExtra("newTODO");
 
     }
 
@@ -48,6 +51,7 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
         Log.d("saveTask called", "saveTask: we made it ");
         String taskname = String.valueOf(nameEditText.getText());
         String tasknote = String.valueOf(notesEditText.getText());
+//        int id = todo.setID(databaseReference.getKey().length());
 
         if (taskname == null || taskname.equals(" ") || tasknote == null || tasknote.equals("")) {
             Toast.makeText(getBaseContext(), "Leave nothing Empty", Toast.LENGTH_SHORT).show();
@@ -56,10 +60,16 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
         todo = new TODO();
         String tName = todo.setName(taskname);
         String tNote = todo.setNote(tasknote);
+        Boolean edit = todo.getEditable(true);
+
+        todo.toMap();
+       //TODO: assign a unique ID to each entry
+        databaseReference.child(tName).setValue(todo);
+
 
         Intent intent = getIntent();
         intent.putExtra("name",tName);
-        intent.putExtra("node",tNote);
+        intent.putExtra("note",tNote);
         setResult(1,intent);
         finish();
 
