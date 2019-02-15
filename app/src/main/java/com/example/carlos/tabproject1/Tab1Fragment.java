@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,10 +15,16 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 
 /**
@@ -26,7 +33,7 @@ import java.util.ArrayList;
 public class Tab1Fragment extends Fragment {
     DatabaseReference databaseReference;
     FirebaseDatabase firebaseDatabase;
-    ArrayList<TODO> todoArrayList;
+    List<TODO> todoArrayList = new ArrayList<>();
     CheckBox checkBox;
     tabAdapter adapter;
     TODO mTodo;
@@ -105,15 +112,52 @@ public class Tab1Fragment extends Fragment {
         String[] noteArray = getResources().getStringArray(R.array.Notes);
 
         todoArrayList.clear();
+        DatabaseReference mDB = firebaseDatabase.getInstance().getReference();
 
+        mDB.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                getAllTask(dataSnapshot);
+            }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                getAllTask(dataSnapshot);
+            }
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//                taskDeletion(dataSnapshot);
+            }
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
 
-        for (int i = 0; i < nameArray.length; i++) {
-            todoArrayList.add(new TODO(nameArray[i], noteArray[i]));
+        mDB.push();
+        Log.d(TAG, "initializeData: declared");
+//        todoArrayList.add(new TODO("first","1"));
+//        todoArrayList.add(new TODO("second","2"));
 
-        }
+//        for (int i = 0; i < nameArray.length; i++) {
+//            todoArrayList.add(new TODO(nameArray[i], noteArray[i]));
+//
+//        }
         adapter.notifyDataSetChanged();
 
     }
+    private void getAllTask(DataSnapshot dataSnapshot){
+        for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+            String taskTitle = singleSnapshot.getValue(String.class);
+//            TODO dTodo = new TODO("name","note");
+            todoArrayList.add(new TODO(taskTitle));
+            adapter = new tabAdapter(getContext(), todoArrayList);
+            recyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

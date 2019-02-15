@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Carlos on 4/30/2018.
@@ -20,19 +21,19 @@ import java.util.ArrayList;
 
 public class tabAdapter extends RecyclerView.Adapter<tabAdapter.ViewHolder> {
     int p;
-    private ArrayList<TODO> todoArrayList;
+    private List<TODO> todoList;
     private Context context;
     private LayoutInflater layoutInflater;
     private TODO todo;
 
-    tabAdapter(ArrayList todo) {
-        todoArrayList = todo;
+    tabAdapter(List todo) {
+        todoList = todo;
     }
 
-    tabAdapter(Context context, ArrayList<TODO> todoArrayList) {
+    tabAdapter(Context context, List<TODO> todoList) {
         // this.context = context;
         layoutInflater = LayoutInflater.from(context);
-        this.todoArrayList = todoArrayList;
+        this.todoList = todoList;
     }
 
     @Override
@@ -46,12 +47,12 @@ public class tabAdapter extends RecyclerView.Adapter<tabAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final tabAdapter.ViewHolder holder, final int position) {
-        final TODO todo = todoArrayList.get(position);
+        final TODO todo = todoList.get(position);
         p = position;
         holder.bindTo(todo);
         // TODO: 5/16/2018 checkbox listener
-        holder.checkBox.setChecked(todoArrayList.get(position).isEditable());
-        holder.checkBox.setTag(todoArrayList.get(position));
+        holder.checkBox.setChecked(todoList.get(position).isEditable());
+        holder.checkBox.setTag(todoList.get(position));
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -61,7 +62,7 @@ public class tabAdapter extends RecyclerView.Adapter<tabAdapter.ViewHolder> {
                     //todo2.getEditable(cb.isChecked());
                     todo2.getEditable(isChecked);
                     //todoArrayList.get(position).getEditable(cb.isChecked());
-                    todoArrayList.get(position).getEditable(isChecked);
+                    todoList.get(position).getEditable(isChecked);
                     holder.checkBox.setChecked(isChecked);
                     Toast.makeText(holder.checkBox.getContext(), "checkmate", Toast.LENGTH_LONG).show();
 
@@ -95,11 +96,11 @@ public class tabAdapter extends RecyclerView.Adapter<tabAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return todoArrayList.size();
+        return todoList.size();
     }
 
     void removeItem(TODO todo) {
-        todoArrayList.remove(todo);
+        todoList.remove(todo);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

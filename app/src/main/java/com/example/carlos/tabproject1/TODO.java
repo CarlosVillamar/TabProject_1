@@ -18,8 +18,11 @@ class TODO {
 
     }
 
+    public TODO(String name) {
+        this.name = name;
+    }
 
-    public TODO(String name, String notes) {
+    public TODO(String name,String notes) {
        // this.ID = ID;
         this.name = name;
         this.note = notes;
