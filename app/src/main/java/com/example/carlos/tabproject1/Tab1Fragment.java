@@ -1,6 +1,8 @@
 package com.example.carlos.tabproject1;
 
 
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.ValueEventListener;
@@ -24,7 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
 
 import static android.content.ContentValues.TAG;
 
@@ -34,7 +35,6 @@ import static android.content.ContentValues.TAG;
  */
 public class Tab1Fragment extends Fragment {
     DatabaseReference databaseReference;
-//    FirebaseDatabase firebaseDatabase;
     List<TODO> todoArrayList = new ArrayList<>();
 
 
@@ -63,13 +63,37 @@ public class Tab1Fragment extends Fragment {
 
         adapter = new tabAdapter(getContext(), todoArrayList);
         recyclerView.setAdapter(adapter);
-
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        initializeData();
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                todoArrayList.clear();
+                for(DataSnapshot dSnap : dataSnapshot.getChildren()) {
+                    getAllTask(dSnap);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+
+
         return v;
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+    public void clearList(){
+        Log.d(TAG, "clearList: runs");
+        if(!todoArrayList.isEmpty()){
+            todoArrayList.clear();
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -83,41 +107,34 @@ public class Tab1Fragment extends Fragment {
 
                 Intent intent = new Intent(getContext(), AddActivity.class);
                 startActivityForResult(intent, 1);
-
-                adapter.notifyDataSetChanged();
                 break;
             case R.id.menuDelete:
                 if (todoArrayList.size() >= 1) {
-                    todoArrayList.remove(todoArrayList.size() - 1);
-//                        checkBox.isSelected();
+//                    checkBox.isSelected();
 //                    checkBox.setOnCheckedChangeListener((CompoundButton.OnCheckedChangeListener) this);
 //                    checkBox.getTag();
-//                    todoArrayList.remove();
-//                    databaseReference.addChildEventListener(new ChildEventListener() {
-//                        @Override
-//                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    databaseReference.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 //                            getAllTask(dataSnapshot);
-//                        }
-//                        @Override
-//                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                        }
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 //                            getAllTask(dataSnapshot);
-//                        }
-//                        @Override
-//                        public void onChildRemoved(DataSnapshot dataSnapshot) {
-//                            taskDeletion(dataSnapshot);
-//                        }
-//                        @Override
-//                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//                        }
-//                        @Override
-//                        public void onCancelled(DatabaseError databaseError) {
-//                        }
-//                    });
-                    adapter.notifyDataSetChanged();
-                } else {
-                    break;
+                        }
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+                            taskDeletion(dataSnapshot);
+                        }
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
+//                    adapter.notifyDataSetChanged();
                 }
-                break;
 
             default:
 
@@ -126,67 +143,22 @@ public class Tab1Fragment extends Fragment {
     }
 
 
-    private void initializeData() {
-
-        String[] nameArray = getResources().getStringArray(R.array.Name);
-        String[] noteArray = getResources().getStringArray(R.array.Notes);
-
-        todoArrayList.clear();
-
-//        DatabaseReference reference =  firebaseDatabase.getReference();
-        // Read from the database
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-//                String value = dataSnapshot.getValue(String.class);
-//                Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                for(DataSnapshot dSnap : dataSnapshot.getChildren()) {
-//                    String taskValue = dSnap.getValue(String.class);
-//                    todoArrayList.add(new TODO(taskValue));
-//                    Log.d("Yerrrrrrrrr", "Value is: " + taskValue);
-//
-//                }
-//                    adapter = new tabAdapter(getContext(), todoArrayList);
-//                    recyclerView.setAdapter(adapter);
-//                    adapter.notifyDataSetChanged();Ò
-                    getAllTask(dSnap);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });
-
-        Log.d("yerrrr", "initializeData: declared");
-        adapter.notifyDataSetChanged();
-
-    }
     private void getAllTask(DataSnapshot dataSnapshot){
-//        for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-//            String taskTitle = singleSnapshot.getValue(String.class);
-            String key2 = databaseReference.child("task").toString();
-            Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-            map.get(key2);
-            Log.d("Yerrrrrrrrr", "Value is: " + map);
-            todoArrayList.add(new TODO(key2));
+            TODO key = dataSnapshot.getValue(TODO.class);
+            todoArrayList.add(key);
             adapter = new tabAdapter(getContext(), todoArrayList);
             recyclerView.setAdapter(adapter);
-            recyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
-//        }
+
     }
 
     private void taskDeletion(DataSnapshot dataSnapshot){
         for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-            String taskTitle = singleSnapshot.getValue(String.class);
+            TODO taskTitle = singleSnapshot.getValue(TODO.class);
             for(int i = 0; i < todoArrayList.size(); i++){
-                if(todoArrayList.get(i).getName().equals(taskTitle)){
-                    todoArrayList.remove(i);
+                if(todoArrayList.contains(taskTitle)&& checkBox.isChecked()){
+                    todoArrayList.remove(taskTitle);
+
                 }
             }
             Log.d(TAG, "Task tile " + taskTitle);
@@ -200,18 +172,18 @@ public class Tab1Fragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+            String v = data.getStringExtra("note");
+            String s = data.getStringExtra("name");
+            Boolean edit = data.getBooleanExtra("is this editable",true);
+            if(s.isEmpty()) s ="fix me";
 
         if (requestCode == 1) {
-
-//            String s = data.getStringExtra("name");
-//            String v = data.getStringExtra("note");
-//            databaseReference.child(s).push();
-//            mTodo = new TODO(s, v);
-//            todoArrayList.add(mTodo);
-            adapter.notifyDataSetChanged();
-
+            mTodo = new TODO(s, v,edit);
+            databaseReference.child(s).setValue(mTodo);
+        }else{
+            return;
         }
-
+            adapter.notifyDataSetChanged();
     }
 
 

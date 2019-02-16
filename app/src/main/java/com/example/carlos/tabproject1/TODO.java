@@ -4,7 +4,6 @@ import com.google.firebase.database.Exclude;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.jar.Attributes;
 
 /**
  * Created by Carlos on 4/30/2018.
@@ -29,11 +28,11 @@ class TODO {
         this.name = name;
     }
 
-    public TODO(String name,String notes) {
+    public TODO(String name,String notes,Boolean editable) {
        // this.ID = ID;
         this.name = name;
         this.note = notes;
-       // this.editable =  editable;
+        this.editable =  editable;
 
     }
 

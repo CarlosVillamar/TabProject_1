@@ -81,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -92,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        //outState.putString("meh",mSectionsPagerAdapter.getItem());
+//        outState.putString("meh",mSectionsPagerAdapter.getItem());
     }
 
     /**
@@ -106,17 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<TODO> todoArrayList;
         tabAdapter adapter;
-        public int[] Draw = {
-                R.drawable.fcbarcelona,
-                R.drawable.androidappbanner,
-                R.drawable.starwars,
-                R.drawable.smartphones
-
-        };
-
-
         private static final String ARG_SECTION_NUMBER = "section_number";
-        private ListView listView;
 
         public PlaceholderFragment() {
         }
@@ -140,18 +129,6 @@ public class MainActivity extends AppCompatActivity {
                                  Bundle savedInstanceState) {
             setHasOptionsMenu(true);
             Log.d(".onCreateView", "it works");
-           /* View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-            listView = (ListView) rootView.findViewById(R.id.taskListView);
-            //switch to recyclerView
-
-            String[] s = {"hi", "bye", "potato", "Idaho", "a", "b", "c", "d", "f", "l", "p", "13", "10", "56", "34"};
-            ArrayAdapter adapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, s);
-
-            listView.setAdapter(adapter);
-
-
-    */
             View v = inflater.inflate(R.layout.fragment_tab1, container, false);
             RecyclerView recyclerView = v.findViewById(R.id.recycleView);
             todoArrayList = new ArrayList<TODO>();
@@ -175,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
             todoArrayList.clear();
 
             for(int i = 0; i< nameArray.length;i++){
-                todoArrayList.add(new TODO(nameArray[i],noteArray[i]));
+                todoArrayList.add(new TODO(nameArray[i],noteArray[i],false));
 
             }
             adapter.notifyDataSetChanged();
@@ -190,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
             switch (id) {
                 case R.id.menuAddTask:
                    // Toast.makeText(getContext(), "meh", Toast.LENGTH_SHORT).show();
-                    todoArrayList.add(new TODO("NAME","NOTES") );
+                    todoArrayList.add(new TODO("NAME","NOTES",true) );
                     adapter.notifyDataSetChanged();
                     break;
                 case R.id.menuDelete:
@@ -209,10 +186,6 @@ public class MainActivity extends AppCompatActivity {
             }
             return super.onOptionsItemSelected(item);
         }
-
-
-
-
 
     }
 
