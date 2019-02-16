@@ -3,6 +3,8 @@ package com.example.carlos.tabproject1;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,25 +72,48 @@ public class tabAdapter extends RecyclerView.Adapter<tabAdapter.ViewHolder> {
                 }
             }
         });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AlertDialog.Builder editBuilder = new AlertDialog.Builder(holder.itemView.getContext());
+                editBuilder.setView(R.layout.edit_activity).setPositiveButton("Done", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(editBuilder.getContext(), "yerrrrrr", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(holder.itemView.getContext(), AddActivity.class);
+                        //TODO: add intent and activity to edit TODO
+
+                    }
+
+                }).setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(editBuilder.getContext(),"no action taken",Toast.LENGTH_LONG).show();
+                    }
+                }).create().show();
+//                editBuilder.setMessage("Edit Entry").setCancelable(false).setPositiveButton("Done", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Toast.makeText(editBuilder.getContext(), "yerrrrrr", Toast.LENGTH_SHORT).show();
+//                    }
+//                }).setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Toast.makeText(editBuilder.getContext(),"no action taken",Toast.LENGTH_LONG).show();
+//                    }
+//                }).create().show();
+//                return true;
+
+
+
+
+
+            }
+        });
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                /**todo build an dialog listener**/
-                final AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext());
-                builder.setMessage("Edit Entry").setCancelable(false)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(builder.getContext(), "yerrrrrr", Toast.LENGTH_LONG).show();
-                                //TODO: create an intent for edit activity
-
-                            }
-                        }).setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                }).create().show();
+                Toast.makeText(holder.itemView.getContext(),"Long Click Works",Toast.LENGTH_LONG).show();
                 return true;
             }
         });
