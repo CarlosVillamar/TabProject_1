@@ -89,24 +89,6 @@ public class tabAdapter extends RecyclerView.Adapter<tabAdapter.ViewHolder> impl
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(),EditActivity.class);
                 v.getContext().startActivity(intent);
-//                final AlertDialog.Builder editBuilder = new AlertDialog.Builder(holder.itemView.getContext());
-//
-//
-//                editBuilder.setView(R.layout.edit_activity).setPositiveButton("Done", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        Toast.makeText(editBuilder.getContext(), "yerrrrrr", Toast.LENGTH_SHORT).show();
-//
-//
-//                    }
-//
-//                }).setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        Toast.makeText(editBuilder.getContext(),"no action taken",Toast.LENGTH_LONG).show();
-//                    }
-//                }).create().show();
-
             }
         });
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {

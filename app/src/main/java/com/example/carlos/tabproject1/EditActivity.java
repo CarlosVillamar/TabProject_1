@@ -41,7 +41,7 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
         notesEditText.setOnKeyListener(this);
         notesEditText.setText("we in the building");
 
-        databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference(getString(R.string.tab_text_1));
 
         doneBtn = findViewById(R.id.editDone);
         doneBtn.setOnClickListener(new View.OnClickListener() {
@@ -51,6 +51,7 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
 //                Log.d("We in the building", "onClick: Done");
 //                saveTask();
                 Log.d("yerrrr", "onClick: " + databaseReference.orderByKey());
+                databaseReference.child("Tasks").getKey();
                 finish();
             }
         });

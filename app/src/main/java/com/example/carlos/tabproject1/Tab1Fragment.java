@@ -41,7 +41,8 @@ public class Tab1Fragment extends Fragment {
 
     public Tab1Fragment() {
         // Required empty public constructor
-    }    CheckBox checkBox;
+    }
+    CheckBox checkBox;
     tabAdapter adapter;
     TODO mTodo;
     RecyclerView recyclerView;
@@ -64,7 +65,9 @@ public class Tab1Fragment extends Fragment {
 
         adapter = new tabAdapter(getContext(), todoArrayList);
         recyclerView.setAdapter(adapter);
-        databaseReference = FirebaseDatabase.getInstance().getReference();
+//        databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference(getString(R.string.tab_text_1));
+        //we can now pull speffic instances
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -185,6 +188,7 @@ public class Tab1Fragment extends Fragment {
         if (requestCode == 1) {
             mTodo = new TODO(s, v,edit);
             databaseReference.child(s).setValue(mTodo);
+            //as long as we make sure we have the right references we can just add it to the correc nesting tree
         }else{
             return;
         }

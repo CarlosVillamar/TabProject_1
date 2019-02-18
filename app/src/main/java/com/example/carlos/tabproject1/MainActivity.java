@@ -1,6 +1,7 @@
 package com.example.carlos.tabproject1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -19,14 +20,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -105,6 +112,12 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<TODO> todoArrayList;
         tabAdapter adapter;
+        DatabaseReference databaseReference;
+        RecyclerView recyclerView;
+        CheckBox checkBox;
+        TODO mTodo;
+        Context context;
+
         private static final String ARG_SECTION_NUMBER = "section_number";
 
         public PlaceholderFragment() {
@@ -129,33 +142,76 @@ public class MainActivity extends AppCompatActivity {
                                  Bundle savedInstanceState) {
             setHasOptionsMenu(true);
             Log.d(".onCreateView", "it works");
-            View v = inflater.inflate(R.layout.fragment_tab1, container, false);
-            RecyclerView recyclerView = v.findViewById(R.id.recycleView);
+            View v = inflater.inflate(R.layout.fragment_main, container, false);
+            RecyclerView recyclerView = v.findViewById(R.id.recycleViewMain);
+
             todoArrayList = new ArrayList<TODO>();
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
             recyclerView.setLayoutManager(linearLayoutManager);
             recyclerView.setHasFixedSize(true);
             recyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
-
-
             adapter = new tabAdapter(getContext(),todoArrayList);
             recyclerView.setAdapter(adapter);
+            databaseReference = FirebaseDatabase.getInstance().getReference(getString(R.string.tab_text_2));
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // This method is called once with the initial value and again
+                    // whenever data at this location is updated.
+                    todoArrayList.clear();
+                    for(DataSnapshot dSnap : dataSnapshot.getChildren()) {
+//                        getAllTask(dSnap);
+                    }
+                }
 
-            initializeData();
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    // Failed to read value
+                    Log.w(TAG, "Failed to read value.", error.toException());
+                }
+            });
+
+
+
+//            initializeData();
             return v;
         }
 
-        private void initializeData() {
-            String[] nameArray = getResources().getStringArray(R.array.tab2Name);
-            String[] noteArray = getResources().getStringArray(R.array.NotesforTab2);
-
-            todoArrayList.clear();
-
-            for(int i = 0; i< nameArray.length;i++){
-                todoArrayList.add(new TODO(nameArray[i],noteArray[i],false));
-
-            }
+//        private void initializeData() {
+//            String[] nameArray = getResources().getStringArray(R.array.tab2Name);
+//            String[] noteArray = getResources().getStringArray(R.array.NotesforTab2);
+//
+//            todoArrayList.clear();
+//
+//            for(int i = 0; i< nameArray.length;i++){
+//                todoArrayList.add(new TODO(nameArray[i],noteArray[i],false));
+//
+//            }
+//            tabAdapter.notifyDataSetChanged();
+//        }
+        private void getAllTask(DataSnapshot dataSnapshot){
+            TODO key = dataSnapshot.getValue(TODO.class);
+            todoArrayList.add(key);
+            adapter = new tabAdapter(context, todoArrayList);
+            recyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
+
+        }
+
+        private void taskDeletion(DataSnapshot dataSnapshot){
+            for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                TODO taskTitle = singleSnapshot.getValue(TODO.class);
+                for(int i = 0; i < todoArrayList.size(); i++){
+                    if(todoArrayList.contains(taskTitle)&& checkBox.isChecked()){
+                        todoArrayList.remove(taskTitle);
+
+                    }
+                }
+                Log.d(TAG, "Task tile " + taskTitle);
+                adapter.notifyDataSetChanged();
+                adapter = new tabAdapter(getContext(), todoArrayList);
+                recyclerView.setAdapter(adapter);
+            }
         }
 
         @Override
@@ -167,8 +223,8 @@ public class MainActivity extends AppCompatActivity {
             switch (id) {
                 case R.id.menuAddTask:
                    // Toast.makeText(getContext(), "meh", Toast.LENGTH_SHORT).show();
-                    todoArrayList.add(new TODO("NAME","NOTES",true) );
-                    adapter.notifyDataSetChanged();
+                    Intent intent = new Intent(getContext(), AddActivity.class);
+                    startActivityForResult(intent, 1);
                     break;
                 case R.id.menuDelete:
                    // Toast.makeText(getContext(), "deleteeMEHHHHH", Toast.LENGTH_SHORT).show();
@@ -185,6 +241,23 @@ public class MainActivity extends AppCompatActivity {
 
             }
             return super.onOptionsItemSelected(item);
+        }
+        @Override
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            super.onActivityResult(requestCode, resultCode, data);
+            String v = data.getStringExtra("note");
+            String s = data.getStringExtra("name");
+            Boolean edit = data.getBooleanExtra("is this editable",true);
+            if(s.isEmpty()) s ="fix me";
+
+            if (requestCode == 1) {
+                mTodo = new TODO(s, v,edit);
+                databaseReference.child(s).setValue(mTodo);
+                //as long as we make sure we have the right references we can just add it to the correc nesting tree
+            }else{
+                return;
+            }
+            adapter.notifyDataSetChanged();
         }
 
     }
