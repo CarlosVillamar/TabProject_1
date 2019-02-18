@@ -14,11 +14,48 @@
     <EditText
         android:id="@+id/notesAlterText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:layout_weight="1"
         android:layout_below="@id/nameAlterText"
         android:gravity="top"
         android:hint="Notes"
         android:inputType="textMultiLine" />
+    <Button
+        android:id="@+id/editDone"
+        android:layout_width="wrap_content"
+        android:layout_height="15pt"
+        android:layout_below="@id/notesAlterText"
+        android:layout_marginRight="5dp"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/colorAccent"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textSize="10pt"
+        android:gravity="bottom"
+        android:text="Done"
+        android:background="@color/editDialogColor"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingEnd="10dp"
+        />
+    <Button
+        android:id="@+id/editCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="15pt"
+        android:layout_below="@id/notesAlterText"
+        android:layout_toLeftOf="@id/editDone"
+        android:layout_marginRight="5dp"
+        android:textColor="@color/colorAccent"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textSize="10pt"
+        android:gravity="bottom"
+        android:text="Cancel"
+        android:background="@color/editDialogColor"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingEnd="10dp"
+        />
+
 
 </RelativeLayout>

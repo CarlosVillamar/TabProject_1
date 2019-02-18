@@ -10,17 +10,21 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class EditActivity extends AppCompatActivity implements View.OnKeyListener ,TextWatcher {
     TODO todo;
     EditText nameEditText, notesEditText;
-    FloatingActionButton addNoteBtn;
+    Button doneBtn, cancelBtn;
     DatabaseReference databaseReference;
     DialogInterface dialog;
+    DataSnapshot dataSnapshot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,16 +34,42 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
         nameEditText = findViewById(R.id.nameAlterText);
         nameEditText.addTextChangedListener(this);
         nameEditText.setOnKeyListener(this);
+        nameEditText.setText("yerrr");
 
         notesEditText = findViewById(R.id.notesAlterText);
         notesEditText.addTextChangedListener(this);
         notesEditText.setOnKeyListener(this);
+        notesEditText.setText("we in the building");
 
-        //consider adding buttons
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+
+        doneBtn = findViewById(R.id.editDone);
+        doneBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "coming soon", Toast.LENGTH_LONG).show();
+//                Log.d("We in the building", "onClick: Done");
+//                saveTask();
+                Log.d("yerrrr", "onClick: " + databaseReference.orderByKey());
+                finish();
+            }
+        });
+        cancelBtn = findViewById(R.id.editCancel);
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "coming soon", Toast.LENGTH_LONG).show();
+                Log.d("you thoughtttt", "onClick: canceled");
+                finish();
+            }
+        });
+
+
 
     }
     public void saveTask() {
         Log.d("saveTask called", "saveTask: we made it ");
+        TODO key = dataSnapshot.getValue(TODO.class);
         String taskname = String.valueOf(nameEditText.getText());
         String tasknote = String.valueOf(notesEditText.getText());
         Intent intent = getIntent();

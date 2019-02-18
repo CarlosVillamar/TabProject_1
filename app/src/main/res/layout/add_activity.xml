@@ -29,10 +29,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/notesEditText"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="310dp"
+        android:foregroundGravity="bottom"
+        android:baseline="@dimen/activity_vertical_margin"
         android:layout_marginRight="0dp"
         android:clickable="true"
-        app:srcCompat="@drawable/ic_create_black_24dp"
+        app:fabSize="normal"
+        app:srcCompat="@drawable/ic_edit_24dp"
         app:useCompatPadding="true" />
 
 </RelativeLayout>

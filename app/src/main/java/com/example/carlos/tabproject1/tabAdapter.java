@@ -1,16 +1,21 @@
 package com.example.carlos.tabproject1;
 
+
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,12 +26,14 @@ import java.util.List;
  * Created by Carlos on 4/30/2018.
  */
 
-public class tabAdapter extends RecyclerView.Adapter<tabAdapter.ViewHolder> {
+public class tabAdapter extends RecyclerView.Adapter<tabAdapter.ViewHolder> implements TextWatcher {
     int p;
     private List<TODO> todoList;
     private Context context;
     private LayoutInflater layoutInflater;
     private TODO todo;
+    private EditText nameEditText, notesEditText;
+
 
     tabAdapter(List todo) {
         context.getApplicationContext();
@@ -53,7 +60,12 @@ public class tabAdapter extends RecyclerView.Adapter<tabAdapter.ViewHolder> {
         final TODO todo = todoList.get(position);
         p = position;
         holder.bindTo(todo);
-        // TODO: 5/16/2018 checkbox listener
+
+
+
+
+
+
         holder.checkBox.setChecked(todoList.get(position).isEditable());
         holder.checkBox.setTag(todoList.get(position));
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -75,38 +87,25 @@ public class tabAdapter extends RecyclerView.Adapter<tabAdapter.ViewHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final AlertDialog.Builder editBuilder = new AlertDialog.Builder(holder.itemView.getContext());
-                editBuilder.setView(R.layout.edit_activity).setPositiveButton("Done", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(editBuilder.getContext(), "yerrrrrr", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(holder.itemView.getContext(), AddActivity.class);
-                        //TODO: add intent and activity to edit TODO
-
-                    }
-
-                }).setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(editBuilder.getContext(),"no action taken",Toast.LENGTH_LONG).show();
-                    }
-                }).create().show();
-//                editBuilder.setMessage("Edit Entry").setCancelable(false).setPositiveButton("Done", new DialogInterface.OnClickListener() {
+                Intent intent = new Intent(v.getContext(),EditActivity.class);
+                v.getContext().startActivity(intent);
+//                final AlertDialog.Builder editBuilder = new AlertDialog.Builder(holder.itemView.getContext());
+//
+//
+//                editBuilder.setView(R.layout.edit_activity).setPositiveButton("Done", new DialogInterface.OnClickListener() {
 //                    @Override
 //                    public void onClick(DialogInterface dialog, int which) {
 //                        Toast.makeText(editBuilder.getContext(), "yerrrrrr", Toast.LENGTH_SHORT).show();
+//
+//
 //                    }
+//
 //                }).setNegativeButton("cancel", new DialogInterface.OnClickListener() {
 //                    @Override
 //                    public void onClick(DialogInterface dialog, int which) {
 //                        Toast.makeText(editBuilder.getContext(),"no action taken",Toast.LENGTH_LONG).show();
 //                    }
 //                }).create().show();
-//                return true;
-
-
-
-
 
             }
         });
@@ -129,6 +128,21 @@ public class tabAdapter extends RecyclerView.Adapter<tabAdapter.ViewHolder> {
         todoList.remove(todo);
     }
 
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         CheckBox checkBox;
         //implement click listener
@@ -144,6 +158,7 @@ public class tabAdapter extends RecyclerView.Adapter<tabAdapter.ViewHolder> {
             noteTV = context.findViewById(R.id.notesTextView);
             checkBox = context.findViewById(R.id.completedCheckBox);
             adapter = inflate;
+
 
 
         }

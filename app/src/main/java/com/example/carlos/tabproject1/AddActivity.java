@@ -1,6 +1,5 @@
 package com.example.carlos.tabproject1;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
@@ -12,15 +11,10 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.ArrayList;
 
 public class AddActivity extends AppCompatActivity implements View.OnKeyListener, TextWatcher {
 
@@ -32,7 +26,7 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_edit_activity);
+        setContentView(R.layout.add_activity);
 
         nameEditText = findViewById(R.id.nameEditText);
         nameEditText.addTextChangedListener(this);

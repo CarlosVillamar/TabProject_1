@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.ValueEventListener;
@@ -103,6 +104,10 @@ public class Tab1Fragment extends Fragment {
         int id = item.getItemId();
 
         switch (id) {
+            case R.id.option_menu:
+                Toast.makeText(getContext(),"Settings menu coming soon",Toast.LENGTH_SHORT).show();
+                //TODO: create a settings menu
+                break;
             case R.id.menuAddTask:
 
                 Intent intent = new Intent(getContext(), AddActivity.class);
@@ -120,7 +125,7 @@ public class Tab1Fragment extends Fragment {
                         }
                         @Override
                         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//                            getAllTask(dataSnapshot);
+                            getAllTask(dataSnapshot);
                         }
                         @Override
                         public void onChildRemoved(DataSnapshot dataSnapshot) {

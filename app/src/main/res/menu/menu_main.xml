@@ -12,4 +12,9 @@
         android:orderInCategory="2"
         android:title="Delete Task"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/option_menu"
+        android:icon="@drawable/ic_menu_24dp"
+        android:orderInCategory="3"
+        android:title="@string/action_settings"/>
 </menu>
