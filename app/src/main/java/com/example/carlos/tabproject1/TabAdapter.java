@@ -1,12 +1,8 @@
 package com.example.carlos.tabproject1;
 
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,14 +15,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Carlos on 4/30/2018.
  */
 
-public class tabAdapter extends RecyclerView.Adapter<tabAdapter.ViewHolder> implements TextWatcher {
+public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> implements TextWatcher {
     int p;
     private List<TODO> todoList;
     private Context context;
@@ -35,28 +30,28 @@ public class tabAdapter extends RecyclerView.Adapter<tabAdapter.ViewHolder> impl
     private EditText nameEditText, notesEditText;
 
 
-    tabAdapter(List todo) {
+    TabAdapter(List todo) {
         context.getApplicationContext();
         todoList = todo;
     }
 
-    tabAdapter(Context context, List<TODO> todoList) {
+    TabAdapter(Context context, List<TODO> todoList) {
         // this.context = context;
         layoutInflater = LayoutInflater.from(context);
         this.todoList = todoList;
     }
 
     @Override
-    public tabAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public TabAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // return new ViewHolder(context, LayoutInflater.from(context).inflate(R.layout.listtask_view,parent,false));
         View v = layoutInflater.inflate(R.layout.listtask_view, parent, false);
 
-        return new tabAdapter.ViewHolder(v, this);
+        return new TabAdapter.ViewHolder(v, this);
     }
 
 
     @Override
-    public void onBindViewHolder(final tabAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final TabAdapter.ViewHolder holder, final int position) {
         final TODO todo = todoList.get(position);
         p = position;
         holder.bindTo(todo);
@@ -131,9 +126,9 @@ public class tabAdapter extends RecyclerView.Adapter<tabAdapter.ViewHolder> impl
         private TextView nameTV, noteTV;
         private Context context;
         private TODO mTODO;
-        private tabAdapter adapter;
+        private TabAdapter adapter;
 
-        public ViewHolder(View context, tabAdapter inflate) {
+        public ViewHolder(View context, TabAdapter inflate) {
             super(context);
 
             nameTV = context.findViewById(R.id.nameTextView);

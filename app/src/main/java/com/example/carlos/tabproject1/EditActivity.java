@@ -83,7 +83,6 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
             String tNote = todo.setNote(tasknote);
             Boolean edit = todo.getEditable(true);
             todo.toMap();
-            //TODO: assign a unique ID to each entry
 
             intent.putExtra("name", tName);
             intent.putExtra("note", tNote);
@@ -98,7 +97,7 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
             String tNote = todo.setNote(tasknote);
             Boolean edit = todo.getEditable(true);
             todo.toMap();
-            //TODO: assign a unique ID to each entry
+
 
             intent.putExtra("name", tName);
             intent.putExtra("note", tNote);

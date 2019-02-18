@@ -43,7 +43,7 @@ public class Tab1Fragment extends Fragment {
         // Required empty public constructor
     }
     CheckBox checkBox;
-    tabAdapter adapter;
+    TabAdapter adapter;
     TODO mTodo;
     RecyclerView recyclerView;
 
@@ -63,9 +63,17 @@ public class Tab1Fragment extends Fragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
 
-        adapter = new tabAdapter(getContext(), todoArrayList);
+        adapter = new TabAdapter(getContext(), todoArrayList);
         recyclerView.setAdapter(adapter);
 //        databaseReference = FirebaseDatabase.getInstance().getReference();
+
+
+
+        return v;
+    }
+    @Override
+    public void onActivityCreated (Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         databaseReference = FirebaseDatabase.getInstance().getReference(getString(R.string.tab_text_1));
         //we can now pull speffic instances
 
@@ -86,9 +94,11 @@ public class Tab1Fragment extends Fragment {
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
         });
+    }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    public void pullReferences(){
 
-        return v;
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
@@ -154,7 +164,7 @@ public class Tab1Fragment extends Fragment {
     private void getAllTask(DataSnapshot dataSnapshot){
             TODO key = dataSnapshot.getValue(TODO.class);
             todoArrayList.add(key);
-            adapter = new tabAdapter(getContext(), todoArrayList);
+            adapter = new TabAdapter(getContext(), todoArrayList);
             recyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
 
@@ -171,7 +181,7 @@ public class Tab1Fragment extends Fragment {
             }
             Log.d(TAG, "Task tile " + taskTitle);
             adapter.notifyDataSetChanged();
-            adapter = new tabAdapter(getContext(), todoArrayList);
+            adapter = new TabAdapter(getContext(), todoArrayList);
             recyclerView.setAdapter(adapter);
         }
     }
