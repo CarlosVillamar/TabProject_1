@@ -1,55 +1,76 @@
 package com.example.carlos.tabproject1;
 
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-public class AddActivity extends AppCompatActivity implements View.OnKeyListener, TextWatcher {
-
+public class EditActivity extends AppCompatActivity implements View.OnKeyListener ,TextWatcher {
     TODO todo;
     EditText nameEditText, notesEditText;
-    FloatingActionButton addNoteBtn;
+    Button doneBtn, cancelBtn;
     DatabaseReference databaseReference;
+    DialogInterface dialog;
+    DataSnapshot dataSnapshot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_activity);
+        setContentView(R.layout.edit_activity);
 
-        nameEditText = findViewById(R.id.nameEditText);
+        nameEditText = findViewById(R.id.nameAlterText);
         nameEditText.addTextChangedListener(this);
         nameEditText.setOnKeyListener(this);
+        nameEditText.setText("yerrr");
 
-        notesEditText = findViewById(R.id.notesEditText);
+        notesEditText = findViewById(R.id.notesAlterText);
         notesEditText.addTextChangedListener(this);
         notesEditText.setOnKeyListener(this);
+        notesEditText.setText("we in the building");
 
-        addNoteBtn = findViewById(R.id.floatingActionButton);
-        addNoteBtn.setOnClickListener(new View.OnClickListener() {
+        databaseReference = FirebaseDatabase.getInstance().getReference(getString(R.string.tab_text_1));
+
+        doneBtn = findViewById(R.id.editDone);
+        doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveTask();
-                v.getWindowToken();
+                Toast.makeText(getApplicationContext(), "coming soon", Toast.LENGTH_LONG).show();
+//                Log.d("We in the building", "onClick: Done");
+//                saveTask();
+                Log.d("yerrrr", "onClick: " + databaseReference.orderByKey());
+                databaseReference.child("Tasks").getKey();
+                finish();
+            }
+        });
+        cancelBtn = findViewById(R.id.editCancel);
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "coming soon", Toast.LENGTH_LONG).show();
+                Log.d("you thoughtttt", "onClick: canceled");
                 finish();
             }
         });
 
-    }
 
+
+    }
     public void saveTask() {
         Log.d("saveTask called", "saveTask: we made it ");
+        TODO key = dataSnapshot.getValue(TODO.class);
         String taskname = String.valueOf(nameEditText.getText());
         String tasknote = String.valueOf(notesEditText.getText());
         Intent intent = getIntent();
@@ -62,7 +83,6 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
             String tNote = todo.setNote(tasknote);
             Boolean edit = todo.getEditable(true);
             todo.toMap();
-            //TODO: assign a unique ID to each entry
 
             intent.putExtra("name", tName);
             intent.putExtra("note", tNote);
@@ -77,7 +97,7 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
             String tNote = todo.setNote(tasknote);
             Boolean edit = todo.getEditable(true);
             todo.toMap();
-            //TODO: assign a unique ID to each entry
+
 
             intent.putExtra("name", tName);
             intent.putExtra("note", tNote);
@@ -87,27 +107,17 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
         }
     }
 
-    @Override
-    public boolean onKey(View v, int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
-            // hide the soft Keyboard
-            InputMethodManager imm = (InputMethodManager)
-                    getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-            return true;
-        } else if (keyCode == KeyEvent.KEYCODE_BACK) {
-            saveTask();
-            v.getWindowToken();
-            this.finish();
-            Log.d("onKey", "Go back");
-            return true;
-        }
-        return false;
-    }
+
+
+
+
+
+
+
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+        //TODO: Add imports text values to their proper input boxes before the change
     }
 
     @Override
@@ -118,5 +128,17 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
     @Override
     public void afterTextChanged(Editable s) {
 
+    }
+
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            saveTask();
+            v.getWindowToken();
+            this.finish();
+            Log.d("onKey", "Go back");
+            return true;
+        }
+        return false;
     }
 }

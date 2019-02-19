@@ -1,5 +1,10 @@
 package com.example.carlos.tabproject1;
 
+import com.google.firebase.database.Exclude;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Carlos on 4/30/2018.
  */
@@ -15,6 +20,7 @@ class TODO {
     private boolean editable;
 
     TODO(){
+        //this class is needed for the database snapshots
 
     }
 
@@ -22,11 +28,11 @@ class TODO {
         this.name = name;
     }
 
-    public TODO(String name,String notes) {
+    public TODO(String name,String notes,Boolean editable) {
        // this.ID = ID;
         this.name = name;
         this.note = notes;
-       // this.editable =  editable;
+        this.editable =  editable;
 
     }
 
@@ -40,10 +46,12 @@ class TODO {
         return note;
     }
 
+
+
     boolean isEditable(){return editable;}
 
     boolean getEditable(boolean editable){
-        this.editable =editable;
+        this.editable = editable;
         return editable;
     }
 
@@ -60,7 +68,15 @@ class TODO {
         this.note = note;
         return note;
     }
-
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("id", ID);
+        result.put("Task Name", name);
+        result.put("Notes", note);
+        result.put("isEditable", editable);
+        return result;
+    }
 
 
 

@@ -1,6 +1,8 @@
 package com.example.carlos.tabproject1;
 
 
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,9 +15,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 import static android.content.ContentValues.TAG;
 
@@ -32,16 +36,16 @@ import static android.content.ContentValues.TAG;
  */
 public class Tab1Fragment extends Fragment {
     DatabaseReference databaseReference;
-    FirebaseDatabase firebaseDatabase;
     List<TODO> todoArrayList = new ArrayList<>();
-    CheckBox checkBox;
-    tabAdapter adapter;
-    TODO mTodo;
-    RecyclerView recyclerView;
+
 
     public Tab1Fragment() {
         // Required empty public constructor
     }
+    CheckBox checkBox;
+    TabAdapter adapter;
+    TODO mTodo;
+    RecyclerView recyclerView;
 
 
     @Override
@@ -51,8 +55,6 @@ public class Tab1Fragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_tab1, container, false);
         recyclerView = v.findViewById(R.id.recycleView);
-
-        //databaseReference = FirebaseDatabase.getInstance().getReference();
         checkBox = v.findViewById(R.id.completedCheckBox);
         todoArrayList = new ArrayList<TODO>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
@@ -61,15 +63,51 @@ public class Tab1Fragment extends Fragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
 
-        adapter = new tabAdapter(getContext(), todoArrayList);
+        adapter = new TabAdapter(getContext(), todoArrayList);
         recyclerView.setAdapter(adapter);
+//        databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        firebaseDatabase = FirebaseDatabase.getInstance();
 
-        initializeData();
+
         return v;
     }
+    @Override
+    public void onActivityCreated (Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        databaseReference = FirebaseDatabase.getInstance().getReference(getString(R.string.tab_text_1));
+        //we can now pull speffic instances
 
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                todoArrayList.clear();
+                for(DataSnapshot dSnap : dataSnapshot.getChildren()) {
+                    getAllTask(dSnap);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    public void pullReferences(){
+
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+    public void clearList(){
+        Log.d(TAG, "clearList: runs");
+        if(!todoArrayList.isEmpty()){
+            todoArrayList.clear();
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -79,25 +117,42 @@ public class Tab1Fragment extends Fragment {
         int id = item.getItemId();
 
         switch (id) {
+            case R.id.option_menu:
+                Toast.makeText(getContext(),"Settings menu coming soon",Toast.LENGTH_SHORT).show();
+                //TODO: create a settings menu
+                break;
             case R.id.menuAddTask:
 
                 Intent intent = new Intent(getContext(), AddActivity.class);
                 startActivityForResult(intent, 1);
-
-                adapter.notifyDataSetChanged();
                 break;
             case R.id.menuDelete:
                 if (todoArrayList.size() >= 1) {
-                    todoArrayList.remove(todoArrayList.size() - 1);
-//                        checkBox.isSelected();
+//                    checkBox.isSelected();
 //                    checkBox.setOnCheckedChangeListener((CompoundButton.OnCheckedChangeListener) this);
 //                    checkBox.getTag();
-//                    todoArrayList.remove();
-                    adapter.notifyDataSetChanged();
-                } else {
-                    break;
+                    databaseReference.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                            getAllTask(dataSnapshot);
+                        }
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                            getAllTask(dataSnapshot);
+                        }
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+                            taskDeletion(dataSnapshot);
+                        }
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
+//                    adapter.notifyDataSetChanged();
                 }
-                break;
 
             default:
 
@@ -106,55 +161,28 @@ public class Tab1Fragment extends Fragment {
     }
 
 
-    private void initializeData() {
-
-        String[] nameArray = getResources().getStringArray(R.array.Name);
-        String[] noteArray = getResources().getStringArray(R.array.Notes);
-
-        todoArrayList.clear();
-        DatabaseReference mDB = firebaseDatabase.getInstance().getReference();
-
-        mDB.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                getAllTask(dataSnapshot);
-            }
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                getAllTask(dataSnapshot);
-            }
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-//                taskDeletion(dataSnapshot);
-            }
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-
-        mDB.push();
-        Log.d(TAG, "initializeData: declared");
-//        todoArrayList.add(new TODO("first","1"));
-//        todoArrayList.add(new TODO("second","2"));
-
-//        for (int i = 0; i < nameArray.length; i++) {
-//            todoArrayList.add(new TODO(nameArray[i], noteArray[i]));
-//
-//        }
-        adapter.notifyDataSetChanged();
-
-    }
     private void getAllTask(DataSnapshot dataSnapshot){
-        for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-            String taskTitle = singleSnapshot.getValue(String.class);
-//            TODO dTodo = new TODO("name","note");
-            todoArrayList.add(new TODO(taskTitle));
-            adapter = new tabAdapter(getContext(), todoArrayList);
+            TODO key = dataSnapshot.getValue(TODO.class);
+            todoArrayList.add(key);
+            adapter = new TabAdapter(getContext(), todoArrayList);
             recyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
+
+    }
+
+    private void taskDeletion(DataSnapshot dataSnapshot){
+        for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+            TODO taskTitle = singleSnapshot.getValue(TODO.class);
+            for(int i = 0; i < todoArrayList.size(); i++){
+                if(todoArrayList.contains(taskTitle)&& checkBox.isChecked()){
+                    todoArrayList.remove(taskTitle);
+
+                }
+            }
+            Log.d(TAG, "Task tile " + taskTitle);
+            adapter.notifyDataSetChanged();
+            adapter = new TabAdapter(getContext(), todoArrayList);
+            recyclerView.setAdapter(adapter);
         }
     }
 
@@ -162,18 +190,19 @@ public class Tab1Fragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+            String v = data.getStringExtra("note");
+            String s = data.getStringExtra("name");
+            Boolean edit = data.getBooleanExtra("is this editable",true);
+            if(s.isEmpty()) s ="fix me";
 
         if (requestCode == 1) {
-
-            String s = data.getStringExtra("name");
-            String v = data.getStringExtra("note");
-
-            mTodo = new TODO(s, v);
-            todoArrayList.add(mTodo);
-            adapter.notifyDataSetChanged();
-
+            mTodo = new TODO(s, v,edit);
+            databaseReference.child(s).setValue(mTodo);
+            //as long as we make sure we have the right references we can just add it to the correc nesting tree
+        }else{
+            return;
         }
-
+            adapter.notifyDataSetChanged();
     }
 
 
