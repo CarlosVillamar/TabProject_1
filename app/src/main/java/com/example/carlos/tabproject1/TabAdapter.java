@@ -23,22 +23,22 @@ import java.util.List;
 
 public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> implements TextWatcher {
     int p;
-    private List<TODO> todoList;
+    private List<Task> taskList;
     private Context context;
     private LayoutInflater layoutInflater;
-    private TODO todo;
+    private Task task;
     private EditText nameEditText, notesEditText;
 
 
     TabAdapter(List todo) {
         context.getApplicationContext();
-        todoList = todo;
+        taskList = todo;
     }
 
-    TabAdapter(Context context, List<TODO> todoList) {
+    TabAdapter(Context context, List<Task> taskList) {
         // this.context = context;
         layoutInflater = LayoutInflater.from(context);
-        this.todoList = todoList;
+        this.taskList = taskList;
     }
 
     @Override
@@ -52,27 +52,27 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> impl
 
     @Override
     public void onBindViewHolder(final TabAdapter.ViewHolder holder, final int position) {
-        final TODO todo = todoList.get(position);
+        final Task task = taskList.get(position);
         p = position;
-        holder.bindTo(todo);
+        holder.bindTo(task);
 
 
 
 
 
 
-        holder.checkBox.setChecked(todoList.get(position).isEditable());
-        holder.checkBox.setTag(todoList.get(position));
+        holder.checkBox.setChecked(taskList.get(position).isEditable());
+        holder.checkBox.setTag(taskList.get(position));
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (holder.checkBox.isChecked()) {
                     CheckBox cb = (CheckBox) buttonView;
-                    TODO todo2 = (TODO) cb.getTag();
-                    //todo2.getEditable(cb.isChecked());
-                    todo2.getEditable(isChecked);
-                    //todoArrayList.get(position).getEditable(cb.isChecked());
-                    todoList.get(position).getEditable(isChecked);
+                    Task task2 = (Task) cb.getTag();
+                    //task2.getEditable(cb.isChecked());
+                    task2.getEditable(isChecked);
+                    //taskArrayList.get(position).getEditable(cb.isChecked());
+//                    taskList.get(position).getEditable(isChecked);
                     holder.checkBox.setChecked(isChecked);
                     Toast.makeText(holder.checkBox.getContext(), "checkmate", Toast.LENGTH_LONG).show();
 
@@ -90,7 +90,10 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> impl
             @Override
             public boolean onLongClick(View v) {
                 Toast.makeText(holder.itemView.getContext(),"Long Click Works",Toast.LENGTH_LONG).show();
+                removeItem(task);
+
                 return true;
+                //Task: consider using this input as a delete option or giving user the option to place task item in the top
             }
         });
 
@@ -98,11 +101,11 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> impl
 
     @Override
     public int getItemCount() {
-        return todoList.size();
+        return taskList.size();
     }
 
-    void removeItem(TODO todo) {
-        todoList.remove(todo);
+    void removeItem(Task task) {
+        taskList.remove(task);
     }
 
     @Override
@@ -125,7 +128,7 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> impl
         //implement click listener
         private TextView nameTV, noteTV;
         private Context context;
-        private TODO mTODO;
+        private Task mTask;
         private TabAdapter adapter;
 
         public ViewHolder(View context, TabAdapter inflate) {
@@ -140,10 +143,10 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> impl
 
         }
 
-        public void bindTo(TODO todo) {
-            nameTV.setText(todo.getName());
-            noteTV.setText(todo.getNote());
-            mTODO = todo;
+        public void bindTo(Task task) {
+            nameTV.setText(task.getName());
+            noteTV.setText(task.getNote());
+            mTask = task;
         }
     }
 }

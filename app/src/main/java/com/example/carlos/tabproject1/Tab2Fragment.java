@@ -30,12 +30,12 @@ public class Tab2Fragment extends Fragment {
      * fragment.
      */
 
-    ArrayList<TODO> todoArrayList;
+    ArrayList<Task> taskArrayList;
     TabAdapter adapter;
     DatabaseReference databaseReference;
     RecyclerView recyclerView;
     CheckBox checkBox;
-    TODO mTodo;
+    Task mTask;
     Context context;
 
     private static final String ARG_SECTION_NUMBER = "section_number";
@@ -64,12 +64,12 @@ public class Tab2Fragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
         RecyclerView recyclerView = v.findViewById(R.id.recycleViewMain);
 
-        todoArrayList = new ArrayList<TODO>();
+        taskArrayList = new ArrayList<Task>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-        adapter = new TabAdapter(getContext(), todoArrayList);
+        adapter = new TabAdapter(getContext(), taskArrayList);
         recyclerView.setAdapter(adapter);
 
        initializeData();
@@ -80,18 +80,18 @@ public class Tab2Fragment extends Fragment {
         String[] nameArray = getResources().getStringArray(R.array.tab2Name);
         String[] noteArray = getResources().getStringArray(R.array.NotesforTab2);
 
-        todoArrayList.clear();
+        taskArrayList.clear();
 
         for(int i = 0; i< nameArray.length;i++){
-            todoArrayList.add(new TODO(nameArray[i],noteArray[i],false));
+            taskArrayList.add(new Task(nameArray[i],noteArray[i],false));
 
         }
         adapter.notifyDataSetChanged();
     }
     private void getAllTask(DataSnapshot dataSnapshot) {
-        TODO key = dataSnapshot.getValue(TODO.class);
-        todoArrayList.add(key);
-        adapter = new TabAdapter(getContext(), todoArrayList);
+        Task key = dataSnapshot.getValue(Task.class);
+        taskArrayList.add(key);
+        adapter = new TabAdapter(getContext(), taskArrayList);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
@@ -99,16 +99,16 @@ public class Tab2Fragment extends Fragment {
 
     private void taskDeletion(DataSnapshot dataSnapshot) {
         for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-            TODO taskTitle = singleSnapshot.getValue(TODO.class);
-            for (int i = 0; i < todoArrayList.size(); i++) {
-                if (todoArrayList.contains(taskTitle) && checkBox.isChecked()) {
-                    todoArrayList.remove(taskTitle);
+            Task taskTitle = singleSnapshot.getValue(Task.class);
+            for (int i = 0; i < taskArrayList.size(); i++) {
+                if (taskArrayList.contains(taskTitle) && checkBox.isChecked()) {
+                    taskArrayList.remove(taskTitle);
 
                 }
             }
             Log.d(TAG, "Task tile " + taskTitle);
             adapter.notifyDataSetChanged();
-            adapter = new TabAdapter(getContext(), todoArrayList);
+            adapter = new TabAdapter(getContext(), taskArrayList);
             recyclerView.setAdapter(adapter);
         }
     }
@@ -127,10 +127,10 @@ public class Tab2Fragment extends Fragment {
                 break;
             case R.id.menuDelete:
                 // Toast.makeText(getContext(), "deleteeMEHHHHH", Toast.LENGTH_SHORT).show();
-                if (todoArrayList.size() >= 0) {
-//                    todoArrayList.remove(todoArrayList.size()-1);
+                if (taskArrayList.size() >= 0) {
+//                    taskArrayList.remove(taskArrayList.size()-1);
 
-                    adapter.removeItem(todoArrayList.remove(2));
+                    adapter.removeItem(taskArrayList.remove(2));
                     adapter.notifyDataSetChanged();
                 } else {
                     break;
@@ -155,7 +155,7 @@ public class Tab2Fragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                todoArrayList.clear();
+                taskArrayList.clear();
                 for(DataSnapshot snap : dataSnapshot.getChildren()) {
 //                        getAllTask(snap);
                 }
@@ -177,8 +177,8 @@ public class Tab2Fragment extends Fragment {
         if(s.isEmpty()) s ="fix me";
 
         if (requestCode == 1) {
-            mTodo = new TODO(s, v,edit);
-            databaseReference.child(s).setValue(mTodo);
+            mTask = new Task(s, v,edit);
+            databaseReference.child(s).setValue(mTask);
             //as long as we make sure we have the right references we can just add it to the correc nesting tree
         }else{
             return;

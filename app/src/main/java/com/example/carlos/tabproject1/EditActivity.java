@@ -3,7 +3,6 @@ package com.example.carlos.tabproject1;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,7 +18,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class EditActivity extends AppCompatActivity implements View.OnKeyListener ,TextWatcher {
-    TODO todo;
+    Task task;
     EditText nameEditText, notesEditText;
     Button doneBtn, cancelBtn;
     DatabaseReference databaseReference;
@@ -70,7 +69,7 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
     }
     public void saveTask() {
         Log.d("saveTask called", "saveTask: we made it ");
-        TODO key = dataSnapshot.getValue(TODO.class);
+        Task key = dataSnapshot.getValue(Task.class);
         String taskname = String.valueOf(nameEditText.getText());
         String tasknote = String.valueOf(notesEditText.getText());
         Intent intent = getIntent();
@@ -78,11 +77,11 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
         if (taskname == null || taskname.equals(" ") || tasknote == null || tasknote.equals("")) {
             Toast.makeText(getBaseContext(), "Leave nothing Empty", Toast.LENGTH_SHORT).show();
             setResult(0,intent);
-            todo = new TODO();
-            String tName = todo.setName(taskname);
-            String tNote = todo.setNote(tasknote);
-            Boolean edit = todo.getEditable(true);
-            todo.toMap();
+            task = new Task();
+            String tName = task.setName(taskname);
+            String tNote = task.setNote(tasknote);
+            Boolean edit = task.getEditable(true);
+            task.toMap();
 
             intent.putExtra("name", tName);
             intent.putExtra("note", tNote);
@@ -92,11 +91,11 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
             return;
         }else {
 
-            todo = new TODO();
-            String tName = todo.setName(taskname);
-            String tNote = todo.setNote(tasknote);
-            Boolean edit = todo.getEditable(true);
-            todo.toMap();
+            task = new Task();
+            String tName = task.setName(taskname);
+            String tNote = task.setNote(tasknote);
+            Boolean edit = task.getEditable(true);
+            task.toMap();
 
 
             intent.putExtra("name", tName);
@@ -117,7 +116,7 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        //TODO: Add imports text values to their proper input boxes before the change
+        //Task: Add imports text values to their proper input boxes before the change
     }
 
     @Override
@@ -133,8 +132,6 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            saveTask();
-            v.getWindowToken();
             this.finish();
             Log.d("onKey", "Go back");
             return true;

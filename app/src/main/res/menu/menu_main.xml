@@ -10,6 +10,7 @@
         android:id="@+id/menuDelete"
         android:icon="@drawable/ic_action_delete"
         android:orderInCategory="2"
+        android:visible="true"
         android:title="Delete Task"
         app:showAsAction="ifRoom" />
     <item

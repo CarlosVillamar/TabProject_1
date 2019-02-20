@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Created by Carlos on 4/30/2018.
  */
-class TODO {
+class Task {
     static final String NAME_KEY = "Name";
     static final String NOTE_KEY = "Notes";
     static final int ID_KEY = 0;
@@ -19,16 +19,16 @@ class TODO {
     private int ID;
     private boolean editable;
 
-    TODO(){
+    Task(){
         //this class is needed for the database snapshots
 
     }
 
-    public TODO(String name) {
+    public Task(String name) {
         this.name = name;
     }
 
-    public TODO(String name,String notes,Boolean editable) {
+    public Task(String name, String notes, Boolean editable) {
        // this.ID = ID;
         this.name = name;
         this.note = notes;
