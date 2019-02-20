@@ -21,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
@@ -30,7 +31,7 @@ public class Tab2Fragment extends Fragment {
      * fragment.
      */
 
-    ArrayList<Task> taskArrayList;
+    List<Task> taskArrayList;
     TabAdapter adapter;
     DatabaseReference databaseReference;
     RecyclerView recyclerView;
@@ -127,14 +128,13 @@ public class Tab2Fragment extends Fragment {
                 break;
             case R.id.menuDelete:
                 // Toast.makeText(getContext(), "deleteeMEHHHHH", Toast.LENGTH_SHORT).show();
-                if (taskArrayList.size() >= 0) {
-//                    taskArrayList.remove(taskArrayList.size()-1);
-
-                    adapter.removeItem(taskArrayList.remove(2));
-                    adapter.notifyDataSetChanged();
-                } else {
-                    break;
-                }
+                Log.d(TAG, "onOptionsItemSelected: " + adapter.p);
+//                if (taskArrayList.contains(mTask.getID())) {
+//                    adapter.removeItem(mTask);
+//                    adapter.notifyDataSetChanged();
+//                } else {
+//                    break;
+//                }
                 break;
             default:
 

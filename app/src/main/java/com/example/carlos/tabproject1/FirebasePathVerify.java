@@ -2,40 +2,46 @@ package com.example.carlos.tabproject1;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.lang.reflect.Array;
 import java.util.Stack;
 
 import static android.content.ContentValues.TAG;
 
-public class pathParser {
-    //    Context context;
-    String s;
+public class FirebasePathVerify {
     int i;
-    pathParser(){}
+    FirebasePathVerify(){}
 
-    public  static String pathCheck(String s){
-//       String newS = null;
+    public  static String pathCheck(String s,Context context){
+        Log.d(TAG, "pathCheck: s before loop" + s);
+
+        String newS = null;
 //        StringBuilder newString = new StringBuilder(s);
+        char [] charArr = new char[s.length()];
+        for(int j = 0; j<s.length();j++){
+            charArr[j] = s.charAt(j);
+            Log.d(TAG, "pathCheck: strong length " + s.length() +"charArr "+ charArr[j]);
+        }
 
-        if (!s.isEmpty()||s==null){
+        if (s==null){
             s = "fix me";
             Log.d(TAG, "pathCheck: " + s);
             return s;
-        }else{
-            char [] charArr = new char[s.length()];
+        }else if(!s.isEmpty()){
 
-            for(int j = 0; j<s.length();j++){
-                charArr[j] = s.charAt(j);
-            }
-
+            Log.d(TAG, "pathCheck: charArr " + charArr);
             for(char c:charArr){
+                Log.d(TAG, "pathCheck: C " + c);
+
                 if(c == '.'||c=='$'||c == '#'||c=='['||c==']'){
-                    s.replace(c,'@');
-                    Log.d(TAG, "pathCheck: " + s);
+                    newS = s.replace(c,'!');
+                    newS = newS.concat(" (update task name)");
+                    Log.d(TAG, "pathCheck: " + newS);
                 }
             }
-
+            Toast.makeText(context.getApplicationContext(),"Task name cannot contain . , # ,$ ,[ or ]",Toast.LENGTH_SHORT).show();
+            return newS;
         }
 //        s= newS;
 //        if (s.contains(".")||s.contains("#")||s.contains("$")) {

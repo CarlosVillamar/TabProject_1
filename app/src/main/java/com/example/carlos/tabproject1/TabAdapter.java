@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by Carlos on 4/30/2018.
@@ -53,13 +56,8 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> impl
     @Override
     public void onBindViewHolder(final TabAdapter.ViewHolder holder, final int position) {
         final Task task = taskList.get(position);
-        p = position;
+
         holder.bindTo(task);
-
-
-
-
-
 
         holder.checkBox.setChecked(taskList.get(position).isEditable());
         holder.checkBox.setTag(taskList.get(position));
@@ -69,10 +67,10 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> impl
                 if (holder.checkBox.isChecked()) {
                     CheckBox cb = (CheckBox) buttonView;
                     Task task2 = (Task) cb.getTag();
-                    //task2.getEditable(cb.isChecked());
                     task2.getEditable(isChecked);
-                    //taskArrayList.get(position).getEditable(cb.isChecked());
-//                    taskList.get(position).getEditable(isChecked);
+                    task2.setID(position);
+                    p = position;
+                    Log.d(TAG, "Checkbox is pressed: "+ task2.isEditable());
                     holder.checkBox.setChecked(isChecked);
                     Toast.makeText(holder.checkBox.getContext(), "checkmate", Toast.LENGTH_LONG).show();
 
@@ -90,10 +88,10 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> impl
             @Override
             public boolean onLongClick(View v) {
                 Toast.makeText(holder.itemView.getContext(),"Long Click Works",Toast.LENGTH_LONG).show();
-                removeItem(task);
-
+                task.isEditable();
+                Log.d(TAG, "onLongClick: "+ task.isEditable());
                 return true;
-                //Task: consider using this input as a delete option or giving user the option to place task item in the top
+                //TODO: consider using this input as a delete option or giving user the option to place task item in the top
             }
         });
 

@@ -16,8 +16,6 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 
-import static android.support.constraint.Constraints.TAG;
-
 public class AddActivity extends AppCompatActivity implements View.OnKeyListener, TextWatcher {
     //Task: whatever entries we use as a path in firebase must not contain . # $ [ or ]
 
@@ -25,7 +23,7 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
     EditText nameEditText, notesEditText;
     FloatingActionButton addNoteBtn;
     DatabaseReference databaseReference;
-    pathParser pathParser;
+    FirebasePathVerify FirebasePathVerify;
     String s, taskname,tasknote;
 
     @Override
@@ -56,39 +54,25 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
     }
 
     public void saveTask() {
+        Intent intent = getIntent();
 
-        Log.d("saveTask called", "saveTask: we made it ");
-//        pathParser.pathCheck(taskname);
-//        pathCheck(taskname);
+//        Log.d("saveTask called", "saveTask: we made it ");
         taskname = String.valueOf(nameEditText.getText());
         tasknote = String.valueOf(notesEditText.getText());
-//        taskname = pathParser.pathCheck(taskname);
-        Intent intent = getIntent();
 
         if (taskname == null || taskname.equals("") || tasknote == null || tasknote.equals("")) {
             Toast.makeText(getBaseContext(), "Leave nothing Empty", Toast.LENGTH_SHORT).show();
-            setResult(0,intent);
-//            task = new Task();
-//            String tName = task.setName(taskname);
-//            String tNote = task.setNote(tasknote);
-//            Boolean edit = task.getEditable(true);
-//            task.toMap();
-//            //Task: assign a unique ID to each entry
-//
-//            intent.putExtra("name", tName);
-//            intent.putExtra("note", tNote);
-//            intent.putExtra("is this editiable", edit);
-//            setResult(1, intent);
+            setResult(0, intent);
             finish();
             return;
-        }else {
+        } else {
 
             task = new Task();
             String tName = task.setName(taskname);
             String tNote = task.setNote(tasknote);
             Boolean edit = task.getEditable(true);
             task.toMap();
-            //Task: assign a unique ID to each entry
+            //TODO: assign a unique ID to each entry
 
             intent.putExtra("name", tName);
             intent.putExtra("note", tNote);
@@ -97,49 +81,7 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
             finish();
         }
     }
-    public void pathCheck(String s){
-//        StringBuilder newString = new StringBuilder(s);
-//        String ParsedString = s;
-//        int i;
-//        switch(5) {
-//            case 0:
-//                if (s.contains(".")) {
-//
-//                    i = s.indexOf(".");
-//                    newString.deleteCharAt(i);
-//                    ParsedString = newString.toString();
-//                }
-//            case 1:
-//                if (s.contains("$")) {
-//
-//                    i = s.indexOf("$");
-//                    newString.deleteCharAt(i);
-//                    ParsedString = newString.toString();
-//                }
-//            case 2:
-//                if (s.contains("#")) {
-//
-//                    i = s.indexOf("#");
-//                    newString.deleteCharAt(i);
-//                    ParsedString = newString.toString();
-//                }
-//            case 3:
-//                if (s.contains("[")) {
-//
-//                    i = s.indexOf("[");
-//                    newString.deleteCharAt(i);
-//                    ParsedString = newString.toString();
-//                }
-//            case 4:
-//                if (s.contains("]")) {
-//
-//                    i = s.indexOf("]");
-//                    newString.deleteCharAt(i);
-//                    ParsedString = newString.toString();
-//                }
-//                break;
-//        }
-    }
+
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
