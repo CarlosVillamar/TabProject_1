@@ -60,19 +60,19 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
         taskname = String.valueOf(nameEditText.getText());
         tasknote = String.valueOf(notesEditText.getText());
 
-        if (taskname == null || taskname.equals("") || tasknote == null || tasknote.equals("")) {
+        if (taskname == null || taskname.equals("")) {
             Toast.makeText(getBaseContext(), "Leave nothing Empty", Toast.LENGTH_SHORT).show();
             setResult(0, intent);
+            Log.d("yerrrrrr", "saveTask: taskname is empty triggered");
             finish();
             return;
-        } else {
-
+        } else if(!taskname.isEmpty()){
+            Log.d("yerrrrrr", "saveTask: taskname is not empty triggered");
             task = new Task();
             String tName = task.setName(taskname);
             String tNote = task.setNote(tasknote);
             Boolean edit = task.getEditable(true);
             task.toMap();
-            //TODO: assign a unique ID to each entry
 
             intent.putExtra("name", tName);
             intent.putExtra("note", tNote);

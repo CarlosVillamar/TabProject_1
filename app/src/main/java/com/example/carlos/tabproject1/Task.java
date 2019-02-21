@@ -19,7 +19,7 @@ class Task {
     private int ID;
     private boolean editable;
 
-    Task(){
+    Task() {
         //this class is needed for the database snapshots
 
     }
@@ -29,14 +29,24 @@ class Task {
     }
 
     public Task(String name, String notes, Boolean editable) {
-       // this.ID = ID;
+        // this.ID = ID;
         this.name = name;
         this.note = notes;
-        this.editable =  editable;
+        this.editable = editable;
 
     }
 
-    int getID(){return ID;}
+    public Task(String name, String notes, Boolean editable, int ID) {
+        this.ID = ID;
+        this.name = name;
+        this.note = notes;
+        this.editable = editable;
+
+    }
+
+    int getID() {
+        return ID;
+    }
 
     String getName() {
         return name;
@@ -47,15 +57,16 @@ class Task {
     }
 
 
+    boolean isEditable() {
+        return editable;
+    }
 
-    boolean isEditable(){return editable;}
-
-    boolean getEditable(boolean editable){
+    boolean getEditable(boolean editable) {
         this.editable = editable;
         return editable;
     }
 
-    public int setID(int id){
+    public int setID(int id) {
         this.ID = id;
         return id;
     }
@@ -64,10 +75,12 @@ class Task {
         this.name = name;
         return name;
     }
-    public String setNote(String note){
+
+    public String setNote(String note) {
         this.note = note;
         return note;
     }
+
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
@@ -77,7 +90,6 @@ class Task {
         result.put("isEditable", editable);
         return result;
     }
-
 
 
 }

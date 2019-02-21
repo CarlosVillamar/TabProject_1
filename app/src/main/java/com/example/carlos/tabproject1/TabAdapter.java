@@ -31,11 +31,20 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> impl
     private LayoutInflater layoutInflater;
     private Task task;
     private EditText nameEditText, notesEditText;
+    private String Tabname;
+    Intent intent;
 
 
     TabAdapter(List todo) {
         context.getApplicationContext();
         taskList = todo;
+    }
+
+    TabAdapter(Context context, List<Task> taskList,String tabname) {
+        // this.context = context;
+        layoutInflater = LayoutInflater.from(context);
+        this.Tabname = tabname;
+        this.taskList = taskList;
     }
 
     TabAdapter(Context context, List<Task> taskList) {
@@ -48,6 +57,7 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> impl
     public TabAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // return new ViewHolder(context, LayoutInflater.from(context).inflate(R.layout.listtask_view,parent,false));
         View v = layoutInflater.inflate(R.layout.listtask_view, parent, false);
+
 
         return new TabAdapter.ViewHolder(v, this);
     }
@@ -80,7 +90,12 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> impl
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                p = position;
                 Intent intent = new Intent(v.getContext(),EditActivity.class);
+                intent.putExtra("Tabname",Tabname);
+                intent.putExtra("Task Number", p);
+                Log.d(TAG, "onCreateViewHolder: " + Tabname);
+                Log.d(TAG, "onCreateViewHolder: " + p);
                 v.getContext().startActivity(intent);
             }
         });
@@ -88,7 +103,7 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> impl
             @Override
             public boolean onLongClick(View v) {
                 Toast.makeText(holder.itemView.getContext(),"Long Click Works",Toast.LENGTH_LONG).show();
-                task.isEditable();
+//                task.isEditable();
                 Log.d(TAG, "onLongClick: "+ task.isEditable());
                 return true;
                 //TODO: consider using this input as a delete option or giving user the option to place task item in the top

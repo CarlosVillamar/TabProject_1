@@ -23,22 +23,32 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
     Button doneBtn, cancelBtn;
     DatabaseReference databaseReference;
     DialogInterface dialog;
+    TabAdapter tabAdapter;
     DataSnapshot dataSnapshot;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_activity);
 
+        String tabName = getIntent().getStringExtra("Tabname");
+        int taskId = getIntent().getIntExtra("Task Number",0);
+        final String taskPath = Integer.toString(taskId);
+        Log.d("edit", "onCreate: tabName " + tabName + " taskId " + taskId + " taskPath " + taskPath );
+
+        databaseReference = FirebaseDatabase.getInstance().getReference(tabName);
+//        Log.d("EditActivity", "onCreate: DB "+ dataSnapshot.getChildren());
+
         nameEditText = findViewById(R.id.nameAlterText);
         nameEditText.addTextChangedListener(this);
         nameEditText.setOnKeyListener(this);
-        nameEditText.setText("yerrr");
+        nameEditText.setText(" ");
 
         notesEditText = findViewById(R.id.notesAlterText);
         notesEditText.addTextChangedListener(this);
         notesEditText.setOnKeyListener(this);
-        notesEditText.setText("we in the building");
+        notesEditText.setText(" ");
 
         databaseReference = FirebaseDatabase.getInstance().getReference(getString(R.string.tab_text_1));
 
@@ -48,7 +58,7 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "coming soon", Toast.LENGTH_LONG).show();
 //                Log.d("We in the building", "onClick: Done");
-//                saveTask();
+                saveTask(taskPath);
                 Log.d("yerrrr", "onClick: " + databaseReference.orderByKey());
                 databaseReference.child("Tasks").getKey();
                 finish();
@@ -67,41 +77,35 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
 
 
     }
-    public void saveTask() {
+    public void saveTask(String taskPath) {
         Log.d("saveTask called", "saveTask: we made it ");
-        Task key = dataSnapshot.getValue(Task.class);
+
         String taskname = String.valueOf(nameEditText.getText());
         String tasknote = String.valueOf(notesEditText.getText());
-        Intent intent = getIntent();
+        int taskId = getIntent().getIntExtra("Task Number",0);
+        Log.d("editSaveTask", "saveTask: taskPath " + taskPath );
 
-        if (taskname == null || taskname.equals(" ") || tasknote == null || tasknote.equals("")) {
+
+        if (taskname == null || taskname.equals(" ")) {
             Toast.makeText(getBaseContext(), "Leave nothing Empty", Toast.LENGTH_SHORT).show();
-            setResult(0,intent);
             task = new Task();
-            String tName = task.setName(taskname);
-            String tNote = task.setNote(tasknote);
+            String tName = "Fix me";
+            String tNote = "Delete me";
             Boolean edit = task.getEditable(true);
-            task.toMap();
-
-            intent.putExtra("name", tName);
-            intent.putExtra("note", tNote);
-            intent.putExtra("is this editiable", edit);
-            setResult(1, intent);
+            task = new Task(tName,tNote,edit,taskId);
+            databaseReference.child(taskPath).setValue(task);
             finish();
             return;
-        }else {
-
+        }else if(!taskname.isEmpty()){
+            Log.d("editSaveTask", "saveTask: " +  taskname+ " " + tasknote );
             task = new Task();
             String tName = task.setName(taskname);
             String tNote = task.setNote(tasknote);
             Boolean edit = task.getEditable(true);
             task.toMap();
 
-
-            intent.putExtra("name", tName);
-            intent.putExtra("note", tNote);
-            intent.putExtra("is this editiable", edit);
-            setResult(1, intent);
+            task = new Task(tName,tNote,edit,taskId);
+            databaseReference.child(taskPath).setValue(task);
             finish();
         }
     }
