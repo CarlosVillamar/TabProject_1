@@ -30,7 +30,7 @@ public class FirebasePathVerify {
             for (char c : charArr) {
                 Log.d(TAG, "pathCheck: C " + c);
 
-                if (c == '.' || c == '$' || c == '#' || c == '[' || c == ']' || c == ' ') {
+                if (c == '.' || c == '$' || c == '#' || c == '[' || c == ']') {
                     newS = s.replace(c, '!');
                     newS = newS.concat(" (update task name)");
                     Log.d(TAG, "pathCheck: " + newS);

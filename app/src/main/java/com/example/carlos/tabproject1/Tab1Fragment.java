@@ -67,6 +67,33 @@ public class Tab1Fragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         databaseReference = FirebaseDatabase.getInstance().getReference(getString(R.string.tab_text_1));
+        databaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                getAllTask(dataSnapshot);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                getAllTask(dataSnapshot);
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                for (DataSnapshot dSnap : dataSnapshot.getChildren()) {
+//                    getAllTask(dSnap);
+                    taskDeletion(dSnap);
+                }
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
 
 
         return v;
@@ -93,6 +120,7 @@ public class Tab1Fragment extends Fragment {
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
         });
+
 
     }
 
@@ -127,36 +155,13 @@ public class Tab1Fragment extends Fragment {
                 startActivityForResult(intent, 1);
                 break;
             case R.id.menuDelete:
+                Toast.makeText(getContext(),"is it gone?",Toast.LENGTH_SHORT).show();
+                String taskPath = Integer.toString(adapter.p);
+                databaseReference.child(taskPath).removeValue();
 
-//                    checkBox.isSelected();
-//                    checkBox.setOnCheckedChangeListener((CompoundButton.OnCheckedChangeListener) this);
-//                    checkBox.getTag();
-                Log.d(TAG, "onOptionsItemSelected: " + adapter.p);
-                databaseReference.addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                            getAllTask(dataSnapshot);
-                    }
 
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                            getAllTask(dataSnapshot);
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-                        taskDeletion(dataSnapshot);
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
                 adapter.notifyDataSetChanged();
+                break;
 
             default:
 
@@ -181,18 +186,29 @@ public class Tab1Fragment extends Fragment {
 
     private void taskDeletion(DataSnapshot dataSnapshot) {
         Log.d(TAG, "taskDeletion: exe");
+        Task taskKey = dataSnapshot.getValue(Task.class);
+//        Task taskTitle = dataSnapshot.getValue(Task.class);
+        Log.d(TAG, "taskDeletion: taskTitle is " + taskKey);
+//        Log.d(TAG, "taskDeletion: " + dataSnapshot.getChildren());
         for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
             Task taskTitle = singleSnapshot.getValue(Task.class);
+            Log.d(TAG, "taskDeletion: taskTitle is " + taskTitle );
+//            if (taskTitle.isEditable()) {
+//                taskArrayList.remove(taskTitle);
+//
+//            }
             for (int i = 0; i < taskArrayList.size(); i++) {
                 if (taskArrayList.contains(taskTitle) && taskTitle.isEditable()) {
+                    Log.d(TAG, "taskDeletion: Helllloooo " );
 //                    taskArrayList.remove(taskTitle);
                 }
             }
-            Log.d(TAG, "Task tile " + taskTitle);
-            adapter.notifyDataSetChanged();
-            adapter = new TabAdapter(getContext(), taskArrayList);
-            recyclerView.setAdapter(adapter);
         }
+
+        adapter.notifyDataSetChanged();
+        adapter = new TabAdapter(getContext(), taskArrayList);
+        recyclerView.setAdapter(adapter);
+//        }
     }
 
 

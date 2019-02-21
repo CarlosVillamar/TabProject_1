@@ -38,7 +38,7 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
         Log.d("edit", "onCreate: tabName " + tabName + " taskId " + taskId + " taskPath " + taskPath );
 
         databaseReference = FirebaseDatabase.getInstance().getReference(tabName);
-//        Log.d("EditActivity", "onCreate: DB "+ dataSnapshot.getChildren());
+        Log.d("EditActivity", "onCreate: DB "+ taskPath);
 
         nameEditText = findViewById(R.id.nameAlterText);
         nameEditText.addTextChangedListener(this);
@@ -91,18 +91,18 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
             task = new Task();
             String tName = "Fix me";
             String tNote = "Delete me";
-            Boolean edit = task.getEditable(true);
+            Boolean edit = task.getEditable(false);
             task = new Task(tName,tNote,edit,taskId);
             databaseReference.child(taskPath).setValue(task);
             finish();
             return;
         }else if(!taskname.isEmpty()){
-            Log.d("editSaveTask", "saveTask: " +  taskname+ " " + tasknote );
+            Log.d("editSaveTask", "saveTask: " +  taskname+ " " + tasknote+" "+ taskPath );
             task = new Task();
             String tName = task.setName(taskname);
             String tNote = task.setNote(tasknote);
-            Boolean edit = task.getEditable(true);
-            task.toMap();
+            Boolean edit = task.getEditable(false);
+//            task.toMap();
 
             task = new Task(tName,tNote,edit,taskId);
             databaseReference.child(taskPath).setValue(task);

@@ -71,7 +71,7 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
             task = new Task();
             String tName = task.setName(taskname);
             String tNote = task.setNote(tasknote);
-            Boolean edit = task.getEditable(true);
+            Boolean edit = task.getEditable(false);
             task.toMap();
 
             intent.putExtra("name", tName);
