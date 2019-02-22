@@ -69,8 +69,9 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> impl
 
         holder.bindTo(task);
 
-        holder.checkBox.setChecked(taskList.get(position).isEditable());
+//        holder.checkBox.setChecked(taskList.get(position).isEditable());
         holder.checkBox.setTag(taskList.get(position));
+
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -78,11 +79,7 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> impl
                     CheckBox cb = (CheckBox) buttonView;
                     Task task2 = (Task) cb.getTag();
                     task2.getEditable(isChecked);
-                    task2.setID(position);
-                    p = position;
-                    Log.d(TAG, "Checkbox is pressed: "+ task2.isEditable());
-                    holder.checkBox.setChecked(isChecked);
-                    Toast.makeText(holder.checkBox.getContext(), "checkmate", Toast.LENGTH_LONG).show();
+                    Toast.makeText(holder.checkBox.getContext(), task2.getName(), Toast.LENGTH_SHORT).show();
 
                 }
             }
@@ -91,11 +88,15 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> impl
             @Override
             public void onClick(View v) {
                 p = position;
+
                 Intent intent = new Intent(v.getContext(),EditActivity.class);
                 intent.putExtra("Tabname",Tabname);
                 intent.putExtra("Task Number", p);
+                intent.putExtra("TaskName", task.getName());
+                intent.putExtra("TaskNote",task.getNote());
                 Log.d(TAG, "onCreateViewHolder: " + Tabname);
                 Log.d(TAG, "onCreateViewHolder: " + p);
+                Log.d(TAG, "onClick: "+ task.getName());
                 v.getContext().startActivity(intent);
             }
         });

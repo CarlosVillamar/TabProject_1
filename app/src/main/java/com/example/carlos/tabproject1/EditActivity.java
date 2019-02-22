@@ -17,6 +17,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.UUID;
+
 public class EditActivity extends AppCompatActivity implements View.OnKeyListener ,TextWatcher {
     Task task;
     EditText nameEditText, notesEditText;
@@ -32,25 +34,21 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_activity);
 
-        String tabName = getIntent().getStringExtra("Tabname");
-        int taskId = getIntent().getIntExtra("Task Number",0);
-        final String taskPath = Integer.toString(taskId);
-        Log.d("edit", "onCreate: tabName " + tabName + " taskId " + taskId + " taskPath " + taskPath );
+        final String tabName = getIntent().getStringExtra("Tabname");
 
         databaseReference = FirebaseDatabase.getInstance().getReference(tabName);
-        Log.d("EditActivity", "onCreate: DB "+ taskPath);
+        Log.d("yerrr", "onCreate: "+ getIntent().getStringExtra("TaskName"));
 
         nameEditText = findViewById(R.id.nameAlterText);
         nameEditText.addTextChangedListener(this);
         nameEditText.setOnKeyListener(this);
-        nameEditText.setText(" ");
+        nameEditText.setText(getIntent().getStringExtra("TaskName"));
 
         notesEditText = findViewById(R.id.notesAlterText);
         notesEditText.addTextChangedListener(this);
         notesEditText.setOnKeyListener(this);
-        notesEditText.setText(" ");
+        notesEditText.setText(getIntent().getStringExtra("TaskNote"));
 
-        databaseReference = FirebaseDatabase.getInstance().getReference(getString(R.string.tab_text_1));
 
         doneBtn = findViewById(R.id.editDone);
         doneBtn.setOnClickListener(new View.OnClickListener() {
@@ -58,9 +56,9 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "coming soon", Toast.LENGTH_LONG).show();
 //                Log.d("We in the building", "onClick: Done");
-                saveTask(taskPath);
+                saveTask();
                 Log.d("yerrrr", "onClick: " + databaseReference.orderByKey());
-                databaseReference.child("Tasks").getKey();
+//                databaseReference.child("Tasks").getKey();
                 finish();
             }
         });
@@ -77,13 +75,14 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
 
 
     }
-    public void saveTask(String taskPath) {
+    public void saveTask() {
         Log.d("saveTask called", "saveTask: we made it ");
 
         String taskname = String.valueOf(nameEditText.getText());
         String tasknote = String.valueOf(notesEditText.getText());
-        int taskId = getIntent().getIntExtra("Task Number",0);
-        Log.d("editSaveTask", "saveTask: taskPath " + taskPath );
+        String ID = UUID.randomUUID().toString();
+//        int taskId = getIntent().getIntExtra("Task Number",0);
+//        Log.d("editSaveTask", "saveTask: taskPath " + taskPath );
 
 
         if (taskname == null || taskname.equals(" ")) {
@@ -92,20 +91,23 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
             String tName = "Fix me";
             String tNote = "Delete me";
             Boolean edit = task.getEditable(false);
-            task = new Task(tName,tNote,edit,taskId);
-            databaseReference.child(taskPath).setValue(task);
+//            ID = task.setID(ID);
+            task.toMap();
+            task = new Task(tName,tNote,edit,ID);
+            databaseReference.child(getIntent().getStringExtra("TaskName")).setValue(task);
             finish();
             return;
         }else if(!taskname.isEmpty()){
-            Log.d("editSaveTask", "saveTask: " +  taskname+ " " + tasknote+" "+ taskPath );
+//            Log.d("editSaveTask", "saveTask: " +  taskname+ " " + tasknote+" "+ taskPath );
             task = new Task();
             String tName = task.setName(taskname);
             String tNote = task.setNote(tasknote);
             Boolean edit = task.getEditable(false);
-//            task.toMap();
+            ID = task.setID(ID);
+            task.toMap();
 
-            task = new Task(tName,tNote,edit,taskId);
-            databaseReference.child(taskPath).setValue(task);
+            task = new Task(tName,tNote,edit,ID);
+            databaseReference.child(getIntent().getStringExtra("TaskName")).setValue(task);
             finish();
         }
     }

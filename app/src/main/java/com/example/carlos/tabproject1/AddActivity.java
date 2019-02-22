@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 
+import java.util.UUID;
+
 public class AddActivity extends AppCompatActivity implements View.OnKeyListener, TextWatcher {
     //Task: whatever entries we use as a path in firebase must not contain . # $ [ or ]
 
@@ -69,14 +71,17 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
         } else if(!taskname.isEmpty()){
             Log.d("yerrrrrr", "saveTask: taskname is not empty triggered");
             task = new Task();
+
             String tName = task.setName(taskname);
             String tNote = task.setNote(tasknote);
             Boolean edit = task.getEditable(false);
+            String ID = task.setID(UUID.randomUUID().toString());
             task.toMap();
 
             intent.putExtra("name", tName);
             intent.putExtra("note", tNote);
             intent.putExtra("is this editiable", edit);
+            intent.putExtra("ID", ID);
             setResult(1, intent);
             finish();
         }

@@ -1,6 +1,5 @@
 package com.example.carlos.tabproject1;
 
-
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Intent;
@@ -26,8 +25,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static android.content.ContentValues.TAG;
+import static android.os.Build.ID;
 
 
 /**
@@ -75,17 +76,15 @@ public class Tab1Fragment extends Fragment {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                taskArrayList.clear();
                 getAllTask(dataSnapshot);
+                Log.d(TAG, "onChildChanged: "+ s);
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                for (DataSnapshot dSnap : dataSnapshot.getChildren()) {
-//                    getAllTask(dSnap);
-                    taskDeletion(dSnap);
-                }
+                getAllTask(dataSnapshot);
             }
-
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
             }
@@ -156,11 +155,15 @@ public class Tab1Fragment extends Fragment {
                 break;
             case R.id.menuDelete:
                 Toast.makeText(getContext(),"is it gone?",Toast.LENGTH_SHORT).show();
-                String taskPath = Integer.toString(adapter.p);
-                databaseReference.child(taskPath).removeValue();
-
-
-                adapter.notifyDataSetChanged();
+                for(int i = 0; i<=taskArrayList.size()-1;i++){
+                    if (taskArrayList.get(i).isEditable()){
+                        //TODO: figure out a way to do this with getID()
+                        mTask = taskArrayList.get(i);
+                        Log.d(TAG, "onOptionsItemSelected: " + mTask.getName());
+                        databaseReference.child(mTask.getName()).removeValue();
+                        adapter.notifyDataSetChanged();
+                    }
+                }
                 break;
 
             default:
@@ -184,49 +187,21 @@ public class Tab1Fragment extends Fragment {
 
     }
 
-    private void taskDeletion(DataSnapshot dataSnapshot) {
-        Log.d(TAG, "taskDeletion: exe");
-        Task taskKey = dataSnapshot.getValue(Task.class);
-//        Task taskTitle = dataSnapshot.getValue(Task.class);
-        Log.d(TAG, "taskDeletion: taskTitle is " + taskKey);
-//        Log.d(TAG, "taskDeletion: " + dataSnapshot.getChildren());
-        for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-            Task taskTitle = singleSnapshot.getValue(Task.class);
-            Log.d(TAG, "taskDeletion: taskTitle is " + taskTitle );
-//            if (taskTitle.isEditable()) {
-//                taskArrayList.remove(taskTitle);
-//
-//            }
-            for (int i = 0; i < taskArrayList.size(); i++) {
-                if (taskArrayList.contains(taskTitle) && taskTitle.isEditable()) {
-                    Log.d(TAG, "taskDeletion: Helllloooo " );
-//                    taskArrayList.remove(taskTitle);
-                }
-            }
-        }
-
-        adapter.notifyDataSetChanged();
-        adapter = new TabAdapter(getContext(), taskArrayList);
-        recyclerView.setAdapter(adapter);
-//        }
-    }
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        int id = adapter.getItemCount() + 1;
+        String id = data.getStringExtra("ID");
         String v = data.getStringExtra("note");
         String s = data.getStringExtra("name");
-        Boolean edit = data.getBooleanExtra("is this editable", true);
-        String pathId = Integer.toString(id);
+        Boolean edit = data.getBooleanExtra("is this editable", false);
+
 
         if (requestCode == 1) {
             s = FirebasePathVerify.pathCheck(s);
-//            pathId = pathId.concat(": " + s);
             mTask = new Task(s, v, edit, id);
-            databaseReference.getRef().child(pathId).setValue(mTask);
-            //as long as we make sure we have the right references we can just add it to the correc nesting tree
+            databaseReference.child(s).setValue(mTask);//TODO:see options menu for delete
+
+            //as long as we make sure we have the right references we can just add it to the correct nesting tree
         } else if (requestCode == 0) {
             return;
         }

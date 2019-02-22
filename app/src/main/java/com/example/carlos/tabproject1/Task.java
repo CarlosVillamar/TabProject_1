@@ -9,14 +9,9 @@ import java.util.Map;
  * Created by Carlos on 4/30/2018.
  */
 class Task {
-    static final String NAME_KEY = "Name";
-    static final String NOTE_KEY = "Notes";
-    static final int ID_KEY = 0;
-
-
     private String name;
     private String note;
-    private int ID;
+    private String ID;
     private boolean editable;
 
     Task() {
@@ -36,7 +31,7 @@ class Task {
 
     }
 
-    public Task(String name, String notes, Boolean editable, int ID) {
+    public Task(String name, String notes, Boolean editable, String ID) {
         this.ID = ID;
         this.name = name;
         this.note = notes;
@@ -44,7 +39,7 @@ class Task {
 
     }
 
-    int getID() {
+    String getID() {
         return ID;
     }
 
@@ -66,9 +61,9 @@ class Task {
         return editable;
     }
 
-    public int setID(int id) {
-        this.ID = id;
-        return id;
+    public String setID(String ID) {
+        this.ID = ID;
+        return ID;
     }
 
     public String setName(String name) {
