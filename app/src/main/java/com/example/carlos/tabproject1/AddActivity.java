@@ -24,8 +24,6 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
     Task task;
     EditText nameEditText, notesEditText;
     FloatingActionButton addNoteBtn;
-    DatabaseReference databaseReference;
-    FirebasePathVerify FirebasePathVerify;
     String s, taskname,tasknote;
 
     @Override

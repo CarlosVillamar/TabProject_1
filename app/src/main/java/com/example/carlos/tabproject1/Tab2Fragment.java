@@ -1,6 +1,7 @@
 package com.example.carlos.tabproject1;
 
-import android.content.Context;
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,8 +13,9 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
+import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,9 +37,7 @@ public class Tab2Fragment extends Fragment {
     TabAdapter adapter;
     DatabaseReference databaseReference;
     RecyclerView recyclerView;
-    CheckBox checkBox;
     Task mTask;
-    Context context;
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -55,62 +55,72 @@ public class Tab2Fragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         Log.d(".onCreateView", "it works");
-        View v = inflater.inflate(R.layout.fragment_main, container, false);
-        RecyclerView recyclerView = v.findViewById(R.id.recycleViewMain);
+        View v = inflater.inflate(R.layout.fragment_tab1, container, false);
+        recyclerView = v.findViewById(R.id.recycleView);
 
         taskArrayList = new ArrayList<Task>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-        adapter = new TabAdapter(getContext(), taskArrayList);
+        adapter = new TabAdapter(getContext(), taskArrayList, getString(R.string.tab_text_2));
         recyclerView.setAdapter(adapter);
 
-       initializeData();
+        databaseReference = FirebaseDatabase.getInstance().getReference(getString(R.string.tab_text_2));
+        Log.d(TAG, "onCreateView: Tab2 " + databaseReference.getKey());
+        databaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                getAllTask(dataSnapshot);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                taskArrayList.clear();
+                getAllTask(dataSnapshot);
+                Log.d(TAG, "onChildChanged: "+ s);
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                getAllTask(dataSnapshot);
+            }
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+
         return v;
     }
 
-    private void initializeData() {
-        String[] nameArray = getResources().getStringArray(R.array.tab2Name);
-        String[] noteArray = getResources().getStringArray(R.array.NotesforTab2);
-
-        taskArrayList.clear();
-
-        for(int i = 0; i< nameArray.length;i++){
-            taskArrayList.add(new Task(nameArray[i],noteArray[i],false));
-
-        }
-        adapter.notifyDataSetChanged();
-    }
     private void getAllTask(DataSnapshot dataSnapshot) {
         Task key = dataSnapshot.getValue(Task.class);
         taskArrayList.add(key);
-        adapter = new TabAdapter(getContext(), taskArrayList);
+        adapter = new TabAdapter(getContext(), taskArrayList, getString(R.string.tab_text_2));
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
     }
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    public void pullReferences() {
 
-    private void taskDeletion(DataSnapshot dataSnapshot) {
-        for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-            Task taskTitle = singleSnapshot.getValue(Task.class);
-            for (int i = 0; i < taskArrayList.size(); i++) {
-                if (taskArrayList.contains(taskTitle) && checkBox.isChecked()) {
-                    taskArrayList.remove(taskTitle);
+    }
 
-                }
-            }
-            Log.d(TAG, "Task tile " + taskTitle);
-            adapter.notifyDataSetChanged();
-            adapter = new TabAdapter(getContext(), taskArrayList);
-            recyclerView.setAdapter(adapter);
+    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+    public void clearList() {
+        Log.d(TAG, "clearList: runs");
+        if (!taskArrayList.isEmpty()) {
+            taskArrayList.clear();
         }
     }
 
@@ -121,20 +131,26 @@ public class Tab2Fragment extends Fragment {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (id) {
+            case R.id.option_menu:
+                Toast.makeText(getContext(), "Settings menu coming soon", Toast.LENGTH_SHORT).show();
+                //TODO: create a settings menu
+                break;
             case R.id.menuAddTask:
                 // Toast.makeText(getContext(), "meh", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getContext(), AddActivity.class);
                 startActivityForResult(intent, 1);
                 break;
             case R.id.menuDelete:
-                // Toast.makeText(getContext(), "deleteeMEHHHHH", Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "onOptionsItemSelected: " + adapter.p);
-//                if (taskArrayList.contains(mTask.getID())) {
-//                    adapter.removeItem(mTask);
-//                    adapter.notifyDataSetChanged();
-//                } else {
-//                    break;
-//                }
+                Toast.makeText(getContext(),"is it gone?",Toast.LENGTH_SHORT).show();
+                for(int i = 0; i<=taskArrayList.size()-1;i++){
+                    if (taskArrayList.get(i).isEditable()){
+                        //TODO: figure out a way to do this with getID()
+                        mTask = taskArrayList.get(i);
+                        Log.d(TAG, "onOptionsItemSelected: " + mTask.getName());
+                        databaseReference.child(mTask.getName()).removeValue();
+                        adapter.notifyDataSetChanged();
+                    }
+                }
                 break;
             default:
 
@@ -143,12 +159,10 @@ public class Tab2Fragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated (Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        databaseReference = FirebaseDatabase.getInstance().getReference();
-        databaseReference.child(getString(R.string.tab_text_2));
-        Log.d(TAG, "onActivityCreated: "+ databaseReference.child(getString(R.string.tab_text_2)));
-        //we can now pull speffic instances
+
+        Log.d(TAG, "onActivityCreated: " + databaseReference.getKey());
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -156,8 +170,9 @@ public class Tab2Fragment extends Fragment {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 taskArrayList.clear();
-                for(DataSnapshot snap : dataSnapshot.getChildren()) {
-//                        getAllTask(snap);
+                for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                    Log.d(TAG, "onDataChange: " + snap);
+                        getAllTask(snap);
                 }
             }
 
@@ -168,19 +183,22 @@ public class Tab2Fragment extends Fragment {
             }
         });
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         String v = data.getStringExtra("note");
         String s = data.getStringExtra("name");
-        Boolean edit = data.getBooleanExtra("is this editable",true);
-        if(s.isEmpty()) s ="fix me";
+        String id = data.getStringExtra("ID");
+        Boolean edit = data.getBooleanExtra("is this editable", false);
 
         if (requestCode == 1) {
-            mTask = new Task(s, v,edit);
-            databaseReference.child(s).setValue(mTask);
-            //as long as we make sure we have the right references we can just add it to the correc nesting tree
-        }else{
+            s = FirebasePathVerify.pathCheck(s);
+            mTask = new Task(s, v, edit, id);
+            databaseReference.child(s).setValue(mTask);//TODO:see options menu for delete
+
+            //as long as we make sure we have the right references we can just add it to the correct nesting tree
+        } else if (requestCode == 0) {
             return;
         }
         adapter.notifyDataSetChanged();

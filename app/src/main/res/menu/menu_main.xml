@@ -19,5 +19,5 @@
         android:orderInCategory="3"
         android:visible="true"
         android:title="@string/action_settings"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="collapseActionView"/>
 </menu>

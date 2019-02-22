@@ -37,16 +37,15 @@ import static android.os.Build.ID;
 public class Tab1Fragment extends Fragment {
     DatabaseReference databaseReference;
     List<Task> taskArrayList = new ArrayList<>();
+    TabAdapter adapter;
+    Task mTask;
+    RecyclerView recyclerView;
 
 
     public Tab1Fragment() {
         // Required empty public constructor
     }
 
-    CheckBox checkBox;
-    TabAdapter adapter;
-    Task mTask;
-    RecyclerView recyclerView;
 
 
     @Override
@@ -56,7 +55,6 @@ public class Tab1Fragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_tab1, container, false);
         recyclerView = v.findViewById(R.id.recycleView);
-        checkBox = v.findViewById(R.id.completedCheckBox);
         taskArrayList = new ArrayList<Task>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
