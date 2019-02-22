@@ -5,11 +5,19 @@
         android:icon="@drawable/ic_action_add"
         android:orderInCategory="1"
         android:title="add task"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
     <item
         android:id="@+id/menuDelete"
         android:icon="@drawable/ic_action_delete"
         android:orderInCategory="2"
+        android:visible="true"
         android:title="Delete Task"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/option_menu"
+        android:icon="@drawable/ic_menu_24dp"
+        android:orderInCategory="3"
+        android:visible="true"
+        android:title="@string/action_settings"
+        app:showAsAction="collapseActionView"/>
 </menu>

@@ -2,16 +2,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#A9A9A9"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.carlos.tabproject1.Tab1Fragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycleView"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="match_parent"
+        android:clipChildren="true"
+        android:layout_margin="10dp"
         android:scrollbars="vertical"
+        android:padding="10dp"
+        android:paddingTop="10dp"
+        android:background="@color/editDialogColor"
         android:text="@string/hello_blank_fragment"
         android:scrollbarSize="@dimen/text_margin"
+        app:layout_scrollFlags="scroll|enterAlways"
         tools:listItem="@layout/main_line_view" />
 
 </FrameLayout>

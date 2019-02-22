@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by Carlos on 5/7/2018.
  */
 
-public class todoDBHelper extends SQLiteOpenHelper {
+public class TaskDBhelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "todoList.db";
     private static final int DATABASE_VERSION = 1;
@@ -19,7 +19,7 @@ public class todoDBHelper extends SQLiteOpenHelper {
     public static final int TODO_ID = 0;
     public static final boolean TODO_EDITABLE = false;
 
-    public todoDBHelper(Context context) {
+    public TaskDBhelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

@@ -2,24 +2,10 @@
     <string name="app_name">Task List</string>
     <string name="tab_text_1">School Tasks</string>
     <string name="tab_text_2">Personal</string>
-    <string name="tab_text_3">Tab 3</string>
     <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <!-- Task: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
-    <string-array name="Name">
-        <item name="Project done">project done</item>
-        <item name="test tomorrow">test tomorrow</item>
-        <item name="Study for technical exams">study for interview</item>
-    </string-array>
-
-    <string-array name="Notes">
-        <item name="skjhfdjklshfkldhhfsdjh">Project phase 1 is due today</item>
-        <item name="dkjsdhkjfhsdkjfhjhdsguifhsdkg">Chapters 9-14</item>
-        <item name="dskjfkldsjk">lookup information about CUNY tech prep</item>
-    </string-array>
 
     <string-array name="tab2Name">
         <item name="FA office">FA office</item>
@@ -32,6 +18,4 @@
         <item name="seperate your whites">seperate your whites</item>
         <item name="How many goals does Salah Score">How many GOALS does Salah score</item>
     </string-array>
-
-
 </resources>

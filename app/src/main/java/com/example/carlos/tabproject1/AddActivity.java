@@ -1,8 +1,8 @@
 package com.example.carlos.tabproject1;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,58 +11,78 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import com.google.firebase.database.DatabaseReference;
+
+import java.util.UUID;
 
 public class AddActivity extends AppCompatActivity implements View.OnKeyListener, TextWatcher {
+    //Task: whatever entries we use as a path in firebase must not contain . # $ [ or ]
 
-    TODO todo;
+    Task task;
     EditText nameEditText, notesEditText;
-    CheckBox checkBox;
+    FloatingActionButton addNoteBtn;
+    String s, taskname,tasknote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_edit_activity);
+        setContentView(R.layout.add_activity);
 
         nameEditText = findViewById(R.id.nameEditText);
-        notesEditText = findViewById(R.id.notesEditText);
-        checkBox = findViewById(R.id.completedCheckBox);
-        //checkBox.onTouchEvent()
-
         nameEditText.addTextChangedListener(this);
-        notesEditText.addTextChangedListener(this);
-
         nameEditText.setOnKeyListener(this);
+
+        notesEditText = findViewById(R.id.notesEditText);
+        notesEditText.addTextChangedListener(this);
         notesEditText.setOnKeyListener(this);
 
+        addNoteBtn = findViewById(R.id.floatingActionButton);
+        addNoteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveTask();
+                v.getWindowToken();
+                finish();
+            }
+        });
 
-       //ArrayList<TODO> mtodoArrayList = (ArrayList<TODO>) Intent.getSerializableExtra("newTODO");
+
 
     }
 
     public void saveTask() {
-        Log.d("saveTask called", "saveTask: we made it ");
-        String taskname = String.valueOf(nameEditText.getText());
-        String tasknote = String.valueOf(notesEditText.getText());
-
-        if (taskname == null || taskname.equals(" ") || tasknote == null || tasknote.equals("")) {
-            Toast.makeText(getBaseContext(), "Leave nothing Empty", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        todo = new TODO();
-        String tName = todo.setName(taskname);
-        String tNote = todo.setNote(tasknote);
-
         Intent intent = getIntent();
-        intent.putExtra("name",tName);
-        intent.putExtra("node",tNote);
-        setResult(1,intent);
-        finish();
 
+//        Log.d("saveTask called", "saveTask: we made it ");
+        taskname = String.valueOf(nameEditText.getText());
+        tasknote = String.valueOf(notesEditText.getText());
+
+        if (taskname == null || taskname.equals("")) {
+            Toast.makeText(getBaseContext(), "Leave nothing Empty", Toast.LENGTH_SHORT).show();
+            setResult(0, intent);
+            Log.d("yerrrrrr", "saveTask: taskname is empty triggered");
+            finish();
+            return;
+        } else if(!taskname.isEmpty()){
+            Log.d("yerrrrrr", "saveTask: taskname is not empty triggered");
+            task = new Task();
+
+            String tName = task.setName(taskname);
+            String tNote = task.setNote(tasknote);
+            Boolean edit = task.getEditable(false);
+            String ID = task.setID(UUID.randomUUID().toString());
+            task.toMap();
+
+            intent.putExtra("name", tName);
+            intent.putExtra("note", tNote);
+            intent.putExtra("is this editiable", edit);
+            intent.putExtra("ID", ID);
+            setResult(1, intent);
+            finish();
+        }
     }
 
     @Override
@@ -76,8 +96,8 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
         } else if (keyCode == KeyEvent.KEYCODE_BACK) {
             saveTask();
             v.getWindowToken();
-            Log.d("onKey", "Go back");
             this.finish();
+            Log.d("onKey", "Go back");
             return true;
         }
         return false;
