@@ -60,7 +60,7 @@ public class Tab2Fragment extends Fragment {
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         Log.d(".onCreateView", "it works");
-        View v = inflater.inflate(R.layout.fragment_tab1, container, false);
+        View v = inflater.inflate(R.layout.tab_fragment, container, false);
         recyclerView = v.findViewById(R.id.recycleView);
 
         taskArrayList = new ArrayList<Task>();
@@ -134,6 +134,8 @@ public class Tab2Fragment extends Fragment {
             case R.id.option_menu:
                 Toast.makeText(getContext(), "Settings menu coming soon", Toast.LENGTH_SHORT).show();
                 //TODO: create a settings menu
+                Intent settingsIntent = new Intent(getContext(),SettingsActivity.class);
+                startActivity(settingsIntent);
                 break;
             case R.id.menuAddTask:
                 // Toast.makeText(getContext(), "meh", Toast.LENGTH_SHORT).show();
@@ -146,8 +148,8 @@ public class Tab2Fragment extends Fragment {
                     if (taskArrayList.get(i).isEditable()){
                         //TODO: figure out a way to do this with getID()
                         mTask = taskArrayList.get(i);
-                        Log.d(TAG, "onOptionsItemSelected: " + mTask.getName());
-                        databaseReference.child(mTask.getName()).removeValue();
+                        Log.d(TAG, "onOptionsItemSelected: " + mTask.getPathname());
+                        databaseReference.child(mTask.getPathname()).removeValue();
                         adapter.notifyDataSetChanged();
                     }
                 }
@@ -190,12 +192,12 @@ public class Tab2Fragment extends Fragment {
         String v = data.getStringExtra("note");
         String s = data.getStringExtra("name");
         String id = data.getStringExtra("ID");
+        String Path = FirebasePathVerify.pathCheck(s);
         Boolean edit = data.getBooleanExtra("is this editable", false);
 
         if (requestCode == 1) {
-            s = FirebasePathVerify.pathCheck(s);
-            mTask = new Task(s, v, edit, id);
-            databaseReference.child(s).setValue(mTask);//TODO:see options menu for delete
+            mTask = new Task(s, v, edit, id, Path);
+            databaseReference.child(Path).setValue(mTask);//TODO:see options menu for delete
 
             //as long as we make sure we have the right references we can just add it to the correct nesting tree
         } else if (requestCode == 0) {

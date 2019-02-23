@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,15 +25,11 @@ import static android.content.ContentValues.TAG;
  * Created by Carlos on 4/30/2018.
  */
 
-public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> implements TextWatcher {
-    int p;
+public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> {
     private List<Task> taskList;
     private Context context;
     private LayoutInflater layoutInflater;
-    private Task task;
-    private EditText nameEditText, notesEditText;
     private String Tabname;
-    Intent intent;
 
 
     TabAdapter(List todo) {
@@ -68,8 +65,6 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> impl
         final Task task = taskList.get(position);
 
         holder.bindTo(task);
-
-//        holder.checkBox.setChecked(taskList.get(position).isEditable());
         holder.checkBox.setTag(taskList.get(position));
 
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -80,34 +75,28 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> impl
                     Task task2 = (Task) cb.getTag();
                     task2.getEditable(isChecked);
                     Toast.makeText(holder.checkBox.getContext(), task2.getName(), Toast.LENGTH_SHORT).show();
-
                 }
             }
         });
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                p = position;
-
                 Intent intent = new Intent(v.getContext(),EditActivity.class);
                 intent.putExtra("Tabname",Tabname);
-                intent.putExtra("Task Number", p);
                 intent.putExtra("TaskName", task.getName());
                 intent.putExtra("TaskNote",task.getNote());
-                Log.d(TAG, "onCreateViewHolder: " + Tabname);
-                Log.d(TAG, "onCreateViewHolder: " + p);
-                Log.d(TAG, "onClick: "+ task.getName());
                 v.getContext().startActivity(intent);
+//                Log.d(TAG, "onCreateViewHolder: " + Tabname);
+//                Log.d(TAG, "onCreateViewHolder: " + p);
+//                Log.d(TAG, "onClick: "+ task.getName());
             }
         });
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(holder.itemView.getContext(),"Long Click Works",Toast.LENGTH_LONG).show();
-//                task.isEditable();
-                Log.d(TAG, "onLongClick: "+ task.isEditable());
+                //TODO: consider using this input to give user the option to place task item in the top
+                Toast.makeText(holder.itemView.getContext(),task.getName(),Toast.LENGTH_LONG).show();
                 return true;
-                //TODO: consider using this input as a delete option or giving user the option to place task item in the top
             }
         });
 
@@ -118,39 +107,19 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> impl
         return taskList.size();
     }
 
-    void removeItem(Task task) {
-        taskList.remove(task);
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-
-    }
-
     public class ViewHolder extends RecyclerView.ViewHolder {
         CheckBox checkBox;
         //implement click listener
         private TextView nameTV, noteTV;
-        private Context context;
         private Task mTask;
         private TabAdapter adapter;
 
-        public ViewHolder(View context, TabAdapter inflate) {
-            super(context);
+        public ViewHolder(View view, TabAdapter inflate) {
+            super(view);
 
-            nameTV = context.findViewById(R.id.nameTextView);
-            noteTV = context.findViewById(R.id.notesTextView);
-            checkBox = context.findViewById(R.id.completedCheckBox);
+            nameTV = view.findViewById(R.id.nameTextView);
+            noteTV = view.findViewById(R.id.notesTextView);
+            checkBox = view.findViewById(R.id.completedCheckBox);
             adapter = inflate;
 
 

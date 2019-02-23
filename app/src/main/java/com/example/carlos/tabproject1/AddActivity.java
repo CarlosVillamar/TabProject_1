@@ -94,7 +94,6 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
             return true;
         } else if (keyCode == KeyEvent.KEYCODE_BACK) {
-            saveTask();
             v.getWindowToken();
             this.finish();
             Log.d("onKey", "Go back");

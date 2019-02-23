@@ -24,10 +24,6 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
     EditText nameEditText, notesEditText;
     Button doneBtn, cancelBtn;
     DatabaseReference databaseReference;
-    DialogInterface dialog;
-    TabAdapter tabAdapter;
-    DataSnapshot dataSnapshot;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +33,7 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
         final String tabName = getIntent().getStringExtra("Tabname");
 
         databaseReference = FirebaseDatabase.getInstance().getReference(tabName);
-        Log.d("yerrr", "onCreate: "+ getIntent().getStringExtra("TaskName"));
+//        Log.d("yerrr", "onCreate: "+ getIntent().getStringExtra("TaskName"));
 
         nameEditText = findViewById(R.id.nameAlterText);
         nameEditText.addTextChangedListener(this);
@@ -54,11 +50,7 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
         doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "coming soon", Toast.LENGTH_LONG).show();
-//                Log.d("We in the building", "onClick: Done");
                 saveTask();
-                Log.d("yerrrr", "onClick: " + databaseReference.orderByKey());
-//                databaseReference.child("Tasks").getKey();
                 finish();
             }
         });
@@ -66,8 +58,6 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "coming soon", Toast.LENGTH_LONG).show();
-                Log.d("you thoughtttt", "onClick: canceled");
                 finish();
             }
         });
@@ -81,9 +71,6 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
         String taskname = String.valueOf(nameEditText.getText());
         String tasknote = String.valueOf(notesEditText.getText());
         String ID = UUID.randomUUID().toString();
-//        int taskId = getIntent().getIntExtra("Task Number",0);
-//        Log.d("editSaveTask", "saveTask: taskPath " + taskPath );
-
 
         if (taskname == null || taskname.equals(" ")) {
             Toast.makeText(getBaseContext(), "Leave nothing Empty", Toast.LENGTH_SHORT).show();
@@ -91,9 +78,8 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
             String tName = "Fix me";
             String tNote = "Delete me";
             Boolean edit = task.getEditable(false);
-//            ID = task.setID(ID);
             task.toMap();
-            task = new Task(tName,tNote,edit,ID);
+            task = new Task(tName,tNote,edit,ID,FirebasePathVerify.pathCheck(tName));
             databaseReference.child(getIntent().getStringExtra("TaskName")).setValue(task);
             finish();
             return;
@@ -102,11 +88,11 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
             task = new Task();
             String tName = task.setName(taskname);
             String tNote = task.setNote(tasknote);
+            String Path = task.setPathname(FirebasePathVerify.pathCheck(tName));
             Boolean edit = task.getEditable(false);
             ID = task.setID(ID);
             task.toMap();
-
-            task = new Task(tName,tNote,edit,ID);
+            task = new Task(tName,tNote,edit,ID,Path);
             databaseReference.child(getIntent().getStringExtra("TaskName")).setValue(task);
             finish();
         }

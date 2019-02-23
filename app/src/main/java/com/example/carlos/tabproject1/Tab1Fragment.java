@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
@@ -25,10 +24,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static android.content.ContentValues.TAG;
-import static android.os.Build.ID;
 
 
 /**
@@ -53,7 +50,7 @@ public class Tab1Fragment extends Fragment {
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_tab1, container, false);
+        View v = inflater.inflate(R.layout.tab_fragment, container, false);
         recyclerView = v.findViewById(R.id.recycleView);
         taskArrayList = new ArrayList<Task>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
@@ -76,7 +73,8 @@ public class Tab1Fragment extends Fragment {
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 taskArrayList.clear();
                 getAllTask(dataSnapshot);
-                Log.d(TAG, "onChildChanged: "+ s);
+                Toast.makeText(getContext(),"List refreshed",Toast.LENGTH_SHORT).show();
+//                Log.d(TAG, "onChildChanged: "+ s);
             }
 
             @Override
@@ -145,6 +143,8 @@ public class Tab1Fragment extends Fragment {
             case R.id.option_menu:
                 Toast.makeText(getContext(), "Settings menu coming soon", Toast.LENGTH_SHORT).show();
                 //TODO: create a settings menu
+                Intent settingsIntent = new Intent(getContext(),SettingsActivity.class);
+                startActivity(settingsIntent);
                 break;
             case R.id.menuAddTask:
                 Intent intent = new Intent(getContext(), AddActivity.class);
@@ -157,8 +157,8 @@ public class Tab1Fragment extends Fragment {
                     if (taskArrayList.get(i).isEditable()){
                         //TODO: figure out a way to do this with getID()
                         mTask = taskArrayList.get(i);
-                        Log.d(TAG, "onOptionsItemSelected: " + mTask.getName());
-                        databaseReference.child(mTask.getName()).removeValue();
+                        Log.d(TAG, "onOptionsItemSelected: node deleted" + mTask.getPathname());
+                        databaseReference.child(mTask.getPathname()).removeValue();
                         adapter.notifyDataSetChanged();
                     }
                 }
@@ -191,13 +191,12 @@ public class Tab1Fragment extends Fragment {
         String id = data.getStringExtra("ID");
         String v = data.getStringExtra("note");
         String s = data.getStringExtra("name");
+        String Path = FirebasePathVerify.pathCheck(s);
         Boolean edit = data.getBooleanExtra("is this editable", false);
 
-
         if (requestCode == 1) {
-            s = FirebasePathVerify.pathCheck(s);
-            mTask = new Task(s, v, edit, id);
-            databaseReference.child(s).setValue(mTask);//TODO:see options menu for delete
+            mTask = new Task(s, v, edit, id, Path);
+            databaseReference.child(Path).setValue(mTask);//TODO:see options menu for delete
 
             //as long as we make sure we have the right references we can just add it to the correct nesting tree
         } else if (requestCode == 0) {
