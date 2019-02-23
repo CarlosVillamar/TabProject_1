@@ -12,14 +12,20 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.SwitchPreference;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -203,6 +209,16 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_notification);
             setHasOptionsMenu(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                SwitchPreference switchPreference =  new SwitchPreference(getContext());
+                if(switchPreference.isEnabled()){
+                    Toast.makeText(getContext(),"yerrrrrr",Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onCreate: hello");
+                }else{
+                    Toast.makeText(getContext(),"nayyyyy",Toast.LENGTH_SHORT).show();
+                }
+
+            }
 
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are
@@ -220,6 +236,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             }
             return super.onOptionsItemSelected(item);
         }
+
+        public void switchOption(){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Toast.makeText(getContext(),"wax on wax off",Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     /**
@@ -233,6 +255,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_data_sync);
             setHasOptionsMenu(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            }
 
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are

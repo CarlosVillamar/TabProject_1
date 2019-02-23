@@ -1,5 +1,6 @@
 package com.example.carlos.tabproject1;
 
+import android.app.Activity;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Intent;
@@ -36,6 +37,7 @@ public class Tab1Fragment extends Fragment {
     List<Task> taskArrayList = new ArrayList<>();
     TabAdapter adapter;
     Task mTask;
+    Activity activity = getActivity();
     RecyclerView recyclerView;
 
 
@@ -90,7 +92,12 @@ public class Tab1Fragment extends Fragment {
             }
         });
 
-
+        if(activity != null&& isAdded()){
+            recyclerView.setVisibility(v.getVisibility());
+            Log.d(TAG, "onCreateView: Visibility set");
+        }else if(isDetached()){
+            Toast.makeText(getContext(),"bruhhh",Toast.LENGTH_SHORT).show();
+        }
         return v;
     }
 
@@ -132,6 +139,7 @@ public class Tab1Fragment extends Fragment {
         }
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -158,6 +166,7 @@ public class Tab1Fragment extends Fragment {
                         //TODO: figure out a way to do this with getID()
                         mTask = taskArrayList.get(i);
                         Log.d(TAG, "onOptionsItemSelected: node deleted" + mTask.getPathname());
+//                        Toast.makeText(getContext(),mTask.getID(),Toast.LENGTH_SHORT).show();
                         databaseReference.child(mTask.getPathname()).removeValue();
                         adapter.notifyDataSetChanged();
                     }
@@ -170,6 +179,27 @@ public class Tab1Fragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        String id = data.getStringExtra("ID");
+        String v = data.getStringExtra("note");
+        String s = data.getStringExtra("name");
+        String Path = FirebasePathVerify.pathCheck(s);
+        Boolean edit = data.getBooleanExtra("is this editable", false);
+
+        if (requestCode == 1) {
+            mTask = new Task(s, v, edit, id, Path);
+            databaseReference.child(Path).setValue(mTask);//TODO:see options menu for delete
+            Toast.makeText(getContext(),mTask.getID(),Toast.LENGTH_SHORT).show();
+
+            //as long as we make sure we have the right references we can just add it to the correct nesting tree
+        } else if (requestCode == 0) {
+            return;
+        }
+        adapter.notifyDataSetChanged();
+    }
 
     private void getAllTask(DataSnapshot dataSnapshot) {
         Task key = dataSnapshot.getValue(Task.class);
@@ -185,25 +215,6 @@ public class Tab1Fragment extends Fragment {
 
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        String id = data.getStringExtra("ID");
-        String v = data.getStringExtra("note");
-        String s = data.getStringExtra("name");
-        String Path = FirebasePathVerify.pathCheck(s);
-        Boolean edit = data.getBooleanExtra("is this editable", false);
-
-        if (requestCode == 1) {
-            mTask = new Task(s, v, edit, id, Path);
-            databaseReference.child(Path).setValue(mTask);//TODO:see options menu for delete
-
-            //as long as we make sure we have the right references we can just add it to the correct nesting tree
-        } else if (requestCode == 0) {
-            return;
-        }
-        adapter.notifyDataSetChanged();
-    }
 
 
 }

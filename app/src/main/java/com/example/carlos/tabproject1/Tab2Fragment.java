@@ -1,5 +1,6 @@
 package com.example.carlos.tabproject1;
 
+import android.app.Activity;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Intent;
@@ -38,6 +39,7 @@ public class Tab2Fragment extends Fragment {
     DatabaseReference databaseReference;
     RecyclerView recyclerView;
     Task mTask;
+    Activity activity;
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -98,6 +100,13 @@ public class Tab2Fragment extends Fragment {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+
+        if(activity != null&& isAdded()){
+            recyclerView.setVisibility(v.getVisibility());
+            Log.d(TAG, "onCreateView: Visibility set");
+        }else if(isDetached()){
+            Toast.makeText(getContext(),"bruhhh",Toast.LENGTH_SHORT).show();
+        }
 
 
         return v;

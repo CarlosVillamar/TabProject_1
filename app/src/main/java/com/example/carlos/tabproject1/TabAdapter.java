@@ -74,7 +74,7 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> {
                     CheckBox cb = (CheckBox) buttonView;
                     Task task2 = (Task) cb.getTag();
                     task2.getEditable(isChecked);
-                    Toast.makeText(holder.checkBox.getContext(), task2.getName(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(holder.checkBox.getContext(), task2.getName(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
