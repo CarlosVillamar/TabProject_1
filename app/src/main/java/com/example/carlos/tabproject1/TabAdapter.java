@@ -4,22 +4,15 @@ package com.example.carlos.tabproject1;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by Carlos on 4/30/2018.
@@ -73,7 +66,7 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> {
                 if (holder.checkBox.isChecked()) {
                     CheckBox cb = (CheckBox) buttonView;
                     Task task2 = (Task) cb.getTag();
-                    task2.getEditable(isChecked);
+                    task2.readyForDeletion(isChecked);
 //                    Toast.makeText(holder.checkBox.getContext(), task2.getName(), Toast.LENGTH_SHORT).show();
                 }
             }

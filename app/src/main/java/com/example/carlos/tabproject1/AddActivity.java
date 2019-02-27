@@ -14,12 +14,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.firebase.database.DatabaseReference;
-
 import java.util.UUID;
-
+/**
+* This activity allows us to add entries into our database for the current tab we have displayed
+*/
 public class AddActivity extends AppCompatActivity implements View.OnKeyListener, TextWatcher {
-    //Task: whatever entries we use as a path in firebase must not contain . # $ [ or ]
+    //Task: whatever entries we use as a pathname for our nodes in firebase must not contain . # $ [ or ]
 
     Task task;
     EditText nameEditText, notesEditText;
@@ -30,6 +30,10 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_activity);
+        /**
+         * Upon creation, we find the input text boxes and buttons we have set in our layout
+         * for this activity and set the appropriate listeners to them
+         */
 
         nameEditText = findViewById(R.id.nameEditText);
         nameEditText.addTextChangedListener(this);
@@ -54,6 +58,9 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
     }
 
     public void saveTask() {
+        /**
+         * This function will save the user's entry and return its data via an intent back to the tab fragment it came from
+         * */
         Intent intent = getIntent();
 
 //        Log.d("saveTask called", "saveTask: we made it ");
@@ -63,7 +70,7 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
         if (taskname == null || taskname.equals("")) {
             Toast.makeText(getBaseContext(), "Leave nothing Empty", Toast.LENGTH_SHORT).show();
             setResult(0, intent);
-            Log.d("yerrrrrr", "saveTask: taskname is empty triggered");
+//            Log.d("yerrrrrr", "saveTask: taskname is empty triggered");
             finish();
             return;
         } else if(!taskname.isEmpty()){
@@ -72,7 +79,7 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
 
             String tName = task.setName(taskname);
             String tNote = task.setNote(tasknote);
-            Boolean edit = task.getEditable(false);
+            Boolean edit = task.readyForDeletion(false);
             String ID = task.setID(UUID.randomUUID().toString());
             task.toMap();
 
@@ -94,6 +101,7 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
             return true;
         } else if (keyCode == KeyEvent.KEYCODE_BACK) {
+            //return to the previous activity without doing anything
             v.getWindowToken();
             this.finish();
             Log.d("onKey", "Go back");

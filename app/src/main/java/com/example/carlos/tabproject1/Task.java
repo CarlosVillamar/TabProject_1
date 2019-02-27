@@ -7,35 +7,34 @@ import java.util.Map;
 
 /**
  * Created by Carlos on 4/30/2018.
+ * this is a getter and setter class for each task created
  */
 class Task {
     private String name, note, ID, pathname;
 
-    private boolean editable;
+    private boolean delete;
 
-    Task() {
-        //this class is needed for the database snapshots
-
+    Task() {//this class is needed for the database snapshots
     }
 
     public Task(String name) {
         this.name = name;
     }
 
-    public Task(String name, String notes, Boolean editable, String ID) {
+    public Task(String name, String notes, Boolean delete, String ID) {
         this.ID = ID;
         this.name = name;
         this.note = notes;
-        this.editable = editable;
+        this.delete = delete;
 
     }
 
-    public Task(String name, String notes, Boolean editable, String ID, String pathname) {
+    public Task(String name, String notes, Boolean delete, String ID, String pathname) {
         this.ID = ID;
         this.pathname = pathname;
         this.name = name;
         this.note = notes;
-        this.editable = editable;
+        this.delete = delete;
 
     }
 
@@ -54,12 +53,12 @@ class Task {
     String getPathname(){return pathname;}
 
 
-    boolean isEditable() {
-        return editable;
+    boolean canWeDelete() {
+        return delete;
     }
 
-    boolean getEditable(boolean editable) {
-        this.editable = editable;
+    boolean readyForDeletion(boolean editable) {
+        this.delete = editable;
         return editable;
     }
 
@@ -87,7 +86,7 @@ class Task {
         result.put("id", ID);
         result.put("Task Name", name);
         result.put("Notes", note);
-        result.put("isEditable", editable);
+        result.put("canWeDelete", delete);
         return result;
     }
 

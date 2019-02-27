@@ -7,6 +7,11 @@ import android.widget.Toast;
 
 import static android.content.ContentValues.TAG;
 
+/**This a class created to act as a home for helper functions to meet certain firebase requirements
+ *
+ * This class will also house other helper functions as the scope of the application changes and
+ * new requirements need to be met*/
+
 public class FirebasePathVerify {
 
 
@@ -14,6 +19,10 @@ public class FirebasePathVerify {
     }
 
     public static String pathCheck(String s) {
+        /**While the current project scope sets the task name as the pathname to retrieve object
+         * nodes, we must check for certain characters or conditions in order to meet firebase path
+         * requirements*/
+
         Log.d(TAG, "pathCheck: s before loop" + s);
         String newS = null;
         //TODO:find more test cases for this method;
@@ -23,26 +32,28 @@ public class FirebasePathVerify {
             Log.d(TAG, "pathCheck: string length " + s.length() + " charArr " + charArr[j]);
         }
 
-        if (s == null) {
-            s = "fix me";
-            Log.d(TAG, "pathCheck: " + s);
-            return s;
-        } else {
+        try {
+
+            if (s == null) {
+                s = "fix me";
+                Log.d(TAG, "pathCheck: " + s);
+                return s;
+            } else {
 
 //            Log.d(TAG, "pathCheck: charArr " + charArr);
-            for (char c : charArr) {
-                Log.d(TAG, "pathCheck: C " + c);
-
-                if (c == '.' || c == '$' || c == '#' || c == '[' || c == ']') {
-                    newS = s.replace(c, ' ');
-//                    newS = newS.concat(" (update task name)");
-
-                    return newS;
+                for (char c : charArr) {
+                    Log.d(TAG, "pathCheck: C " + c);
+                    if (c == '.' || c == '$' || c == '#' || c == '[' || c == ']') {
+                        newS = s.replace(c, ' ');
+                        return newS;
+                    }
                 }
-            }
 
-            return s;
+            }
+        }catch (Exception e){
+
         }
+                return s;
     }
     public static String usernameVerify(String un){
         //TODO: Come back to this during the firebase user authentication phase

@@ -29,11 +29,9 @@ import java.util.List;
 import static android.content.ContentValues.TAG;
 
 public class Tab2Fragment extends Fragment {
-    /**
-     * The fragment argument representing the section number for this
-     * fragment.
-     */
-
+    /**The fragment argument representing the section number for this
+     * fragment. Refer to Tab1Fragment class comments to understand how this class works.
+     * Both classes are identical, we just refer to different firebase instances */
     List<Task> taskArrayList;
     TabAdapter adapter;
     DatabaseReference databaseReference;
@@ -107,22 +105,33 @@ public class Tab2Fragment extends Fragment {
         }else if(isDetached()){
             Toast.makeText(getContext(),"bruhhh",Toast.LENGTH_SHORT).show();
         }
-
-
         return v;
     }
 
-    private void getAllTask(DataSnapshot dataSnapshot) {
-        Task key = dataSnapshot.getValue(Task.class);
-        taskArrayList.add(key);
-        adapter = new TabAdapter(getContext(), taskArrayList, getString(R.string.tab_text_2));
-        recyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-    }
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    public void pullReferences() {
+        Log.d(TAG, "onActivityCreated: " + databaseReference.getKey());
 
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                taskArrayList.clear();
+                for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                    Log.d(TAG, "onDataChange: " + snap);
+                    getAllTask(snap);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
@@ -154,7 +163,7 @@ public class Tab2Fragment extends Fragment {
             case R.id.menuDelete:
                 Toast.makeText(getContext(),"is it gone?",Toast.LENGTH_SHORT).show();
                 for(int i = 0; i<=taskArrayList.size()-1;i++){
-                    if (taskArrayList.get(i).isEditable()){
+                    if (taskArrayList.get(i).canWeDelete()){
                         //TODO: figure out a way to do this with getID()
                         mTask = taskArrayList.get(i);
                         Log.d(TAG, "onOptionsItemSelected: " + mTask.getPathname());
@@ -167,32 +176,6 @@ public class Tab2Fragment extends Fragment {
 
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        Log.d(TAG, "onActivityCreated: " + databaseReference.getKey());
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                taskArrayList.clear();
-                for (DataSnapshot snap : dataSnapshot.getChildren()) {
-                    Log.d(TAG, "onDataChange: " + snap);
-                        getAllTask(snap);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });
     }
 
     @Override
@@ -215,4 +198,12 @@ public class Tab2Fragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
+    private void getAllTask(DataSnapshot dataSnapshot) {
+        Task key = dataSnapshot.getValue(Task.class);
+        taskArrayList.add(key);
+        adapter = new TabAdapter(getContext(), taskArrayList, getString(R.string.tab_text_2));
+        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
+    }
 }

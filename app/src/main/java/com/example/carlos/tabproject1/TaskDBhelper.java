@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 /**
  * Created by Carlos on 5/7/2018.
+ * this class is in active at this time
  */
 
 public class TaskDBhelper extends SQLiteOpenHelper {
