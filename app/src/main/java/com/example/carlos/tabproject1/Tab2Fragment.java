@@ -1,5 +1,6 @@
 package com.example.carlos.tabproject1;
 
+import android.app.Activity;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Intent;
@@ -28,16 +29,15 @@ import java.util.List;
 import static android.content.ContentValues.TAG;
 
 public class Tab2Fragment extends Fragment {
-    /**
-     * The fragment argument representing the section number for this
-     * fragment.
-     */
-
+    /**The fragment argument representing the section number for this
+     * fragment. Refer to Tab1Fragment class comments to understand how this class works.
+     * Both classes are identical, we just refer to different firebase instances */
     List<Task> taskArrayList;
     TabAdapter adapter;
     DatabaseReference databaseReference;
     RecyclerView recyclerView;
     Task mTask;
+    Activity activity;
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -60,7 +60,7 @@ public class Tab2Fragment extends Fragment {
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         Log.d(".onCreateView", "it works");
-        View v = inflater.inflate(R.layout.fragment_tab1, container, false);
+        View v = inflater.inflate(R.layout.tab_fragment, container, false);
         recyclerView = v.findViewById(R.id.recycleView);
 
         taskArrayList = new ArrayList<Task>();
@@ -99,21 +99,39 @@ public class Tab2Fragment extends Fragment {
             }
         });
 
-
+        if(activity != null&& isAdded()){
+            recyclerView.setVisibility(v.getVisibility());
+            Log.d(TAG, "onCreateView: Visibility set");
+        }else if(isDetached()){
+            Toast.makeText(getContext(),"bruhhh",Toast.LENGTH_SHORT).show();
+        }
         return v;
     }
 
-    private void getAllTask(DataSnapshot dataSnapshot) {
-        Task key = dataSnapshot.getValue(Task.class);
-        taskArrayList.add(key);
-        adapter = new TabAdapter(getContext(), taskArrayList, getString(R.string.tab_text_2));
-        recyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-    }
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    public void pullReferences() {
+        Log.d(TAG, "onActivityCreated: " + databaseReference.getKey());
 
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                taskArrayList.clear();
+                for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                    Log.d(TAG, "onDataChange: " + snap);
+                    getAllTask(snap);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
@@ -134,6 +152,8 @@ public class Tab2Fragment extends Fragment {
             case R.id.option_menu:
                 Toast.makeText(getContext(), "Settings menu coming soon", Toast.LENGTH_SHORT).show();
                 //TODO: create a settings menu
+                Intent settingsIntent = new Intent(getContext(),SettingsActivity.class);
+                startActivity(settingsIntent);
                 break;
             case R.id.menuAddTask:
                 // Toast.makeText(getContext(), "meh", Toast.LENGTH_SHORT).show();
@@ -143,11 +163,11 @@ public class Tab2Fragment extends Fragment {
             case R.id.menuDelete:
                 Toast.makeText(getContext(),"is it gone?",Toast.LENGTH_SHORT).show();
                 for(int i = 0; i<=taskArrayList.size()-1;i++){
-                    if (taskArrayList.get(i).isEditable()){
+                    if (taskArrayList.get(i).canWeDelete()){
                         //TODO: figure out a way to do this with getID()
                         mTask = taskArrayList.get(i);
-                        Log.d(TAG, "onOptionsItemSelected: " + mTask.getName());
-                        databaseReference.child(mTask.getName()).removeValue();
+                        Log.d(TAG, "onOptionsItemSelected: " + mTask.getPathname());
+                        databaseReference.child(mTask.getPathname()).removeValue();
                         adapter.notifyDataSetChanged();
                     }
                 }
@@ -159,43 +179,17 @@ public class Tab2Fragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        Log.d(TAG, "onActivityCreated: " + databaseReference.getKey());
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                taskArrayList.clear();
-                for (DataSnapshot snap : dataSnapshot.getChildren()) {
-                    Log.d(TAG, "onDataChange: " + snap);
-                        getAllTask(snap);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         String v = data.getStringExtra("note");
         String s = data.getStringExtra("name");
         String id = data.getStringExtra("ID");
+        String Path = FirebasePathVerify.pathCheck(s);
         Boolean edit = data.getBooleanExtra("is this editable", false);
 
         if (requestCode == 1) {
-            s = FirebasePathVerify.pathCheck(s);
-            mTask = new Task(s, v, edit, id);
-            databaseReference.child(s).setValue(mTask);//TODO:see options menu for delete
+            mTask = new Task(s, v, edit, id, Path);
+            databaseReference.child(Path).setValue(mTask);//TODO:see options menu for delete
 
             //as long as we make sure we have the right references we can just add it to the correct nesting tree
         } else if (requestCode == 0) {
@@ -204,4 +198,12 @@ public class Tab2Fragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
+    private void getAllTask(DataSnapshot dataSnapshot) {
+        Task key = dataSnapshot.getValue(Task.class);
+        taskArrayList.add(key);
+        adapter = new TabAdapter(getContext(), taskArrayList, getString(R.string.tab_text_2));
+        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
+    }
 }
