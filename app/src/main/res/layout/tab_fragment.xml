@@ -1,15 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="#A9A9A9"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:actionBarNavMode="list"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.example.carlos.tabproject1.MainActivity">
+    tools:context="com.example.carlos.tabproject1.Tab1Fragment">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycleViewMain"
+        android:id="@+id/recycleView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipChildren="true"
@@ -23,4 +22,4 @@
         app:layout_scrollFlags="scroll|enterAlways"
         tools:listItem="@layout/main_line_view" />
 
-</LinearLayout>
+</FrameLayout>

@@ -6,18 +6,19 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 /**
  * Created by Carlos on 5/7/2018.
+ * this class is in active at this time
  */
 
 public class TaskDBhelper extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "todoList.db";
+    private static final String DATABASE_NAME = "todoList.db";
     private static final int DATABASE_VERSION = 1;
 
-    public static final String TABLE_NAME = "Todo List";
-    public static final String TODO_NAME = "task";
-    public static final String TODO_NOTE = "note";
-    public static final int TODO_ID = 0;
-    public static final boolean TODO_EDITABLE = false;
+    private static final String TABLE_NAME = "Todo List";
+    private static final String TODO_NAME = "task";
+    private static final String TODO_NOTE = "note";
+    private static final int TODO_ID = 0;
+    private static final boolean TODO_EDITABLE = false;
 
     public TaskDBhelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

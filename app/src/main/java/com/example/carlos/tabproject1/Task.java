@@ -7,35 +7,34 @@ import java.util.Map;
 
 /**
  * Created by Carlos on 4/30/2018.
+ * this is a getter and setter class for each task created
  */
 class Task {
-    private String name;
-    private String note;
-    private String ID;
-    private boolean editable;
+    private String name, note, ID, pathname;
 
-    Task() {
-        //this class is needed for the database snapshots
+    private boolean delete;
 
+    Task() {//this class is needed for the database snapshots
     }
 
     public Task(String name) {
         this.name = name;
     }
 
-    public Task(String name, String notes, Boolean editable) {
-        // this.ID = ID;
-        this.name = name;
-        this.note = notes;
-        this.editable = editable;
-
-    }
-
-    public Task(String name, String notes, Boolean editable, String ID) {
+    public Task(String name, String notes, Boolean delete, String ID) {
         this.ID = ID;
         this.name = name;
         this.note = notes;
-        this.editable = editable;
+        this.delete = delete;
+
+    }
+
+    public Task(String name, String notes, Boolean delete, String ID, String pathname) {
+        this.ID = ID;
+        this.pathname = pathname;
+        this.name = name;
+        this.note = notes;
+        this.delete = delete;
 
     }
 
@@ -51,13 +50,15 @@ class Task {
         return note;
     }
 
+    String getPathname(){return pathname;}
 
-    boolean isEditable() {
-        return editable;
+
+    boolean canWeDelete() {
+        return delete;
     }
 
-    boolean getEditable(boolean editable) {
-        this.editable = editable;
+    boolean readyForDeletion(boolean editable) {
+        this.delete = editable;
         return editable;
     }
 
@@ -65,7 +66,10 @@ class Task {
         this.ID = ID;
         return ID;
     }
-
+    public String setPathname(String pathname){
+        this.pathname = pathname;
+        return pathname;
+    }
     public String setName(String name) {
         this.name = name;
         return name;
@@ -82,7 +86,7 @@ class Task {
         result.put("id", ID);
         result.put("Task Name", name);
         result.put("Notes", note);
-        result.put("isEditable", editable);
+        result.put("canWeDelete", delete);
         return result;
     }
 

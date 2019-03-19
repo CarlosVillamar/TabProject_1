@@ -1,7 +1,7 @@
 package com.example.carlos.tabproject1;
 
 public class TabNames {
-    //getter and setter class for tab names
+    //getter and setter class for tab names for a future update
     private String Tab = " ";
 
     public String setTab(String TabName){

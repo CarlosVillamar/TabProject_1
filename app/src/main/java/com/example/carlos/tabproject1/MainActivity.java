@@ -41,13 +41,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
+        // Create the adapter that will return a fragment for each of the two primary sections of the activity.
 
         mViewPager = (ViewPager) findViewById(R.id.container);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
+        //Set our fragments to the page adapter
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         mSectionsPagerAdapter.getFrag(new Tab2Fragment(), "Personal");
         mSectionsPagerAdapter.getFrag(new Tab2Fragment(), "Business");
@@ -71,16 +71,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static class SectionsPagerAdapter extends FragmentPagerAdapter {
+        /*
+          this is a class to set up an adapter to recognize our tabs
+        */
+
+        //Set up a fixed size for our tabs and the fragments we will attach to the tabs
         ArrayList<String> tabName = new ArrayList<>();
         ArrayList<Fragment> fragments = new ArrayList<>();
         int tabNum;
 
         public SectionsPagerAdapter(FragmentManager fm, int tabCount) {
+            /**pass through the fragment manager and a tab count**/
             super(fm);
             tabNum = tabCount;
         }
 
         public void getFrag(Fragment fragments, String tabName) {
+            /**add our fragments and tad names**/
             this.fragments.add(fragments);
             this.tabName.add(tabName);
 
@@ -89,13 +96,9 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a Tab2Fragment (defined as a static inner class below).
-            // return Tab2Fragment.newInstance(position + 1);
-            // return fragments.get(position);
             /**
-             *
-             * create a switch here for the tab fragments
+             *  create a switch here for the tab fragments and
+             *  getItem is called to instantiate the fragment for the given page.
              */
             switch (position) {
                 case 0:
@@ -109,9 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            // Show 3 total pages
-            // return 2;
-            //return fragments.size();
+            //return the amount of tabs we have set up
             return tabNum;
         }
 
