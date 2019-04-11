@@ -11,12 +11,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
 
     /**
