@@ -1,7 +1,7 @@
 package com.example.carlos.tabproject1;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -26,7 +26,7 @@ import java.util.UUID;
  * However unlike AddActivity the firebase database entry will get set in this class
  * */
 public class EditActivity extends AppCompatActivity implements View.OnKeyListener ,TextWatcher {
-    Task task;
+    TaskList taskList;
     EditText nameEditText, notesEditText;
     Button doneBtn, cancelBtn;
     DatabaseReference databaseReference;
@@ -53,7 +53,7 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
         notesEditText.addTextChangedListener(this);
         notesEditText.setOnKeyListener(this);
 
-        /**unlike AddActivity we will load up the task name and its corresponding note data
+        /**unlike AddActivity we will load up the taskList name and its corresponding note data
          * for the user to see what entry they are editing
          * */
         nameEditText.setText(getIntent().getStringExtra("TaskName"));
@@ -84,28 +84,28 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
 
         if (taskname == null || taskname.equals(" ")) {
             Toast.makeText(getBaseContext(), "Leave nothing Empty", Toast.LENGTH_SHORT).show();
-            task = new Task();
+            taskList = new TaskList();
             String tName = "Fix me";
             String tNote = "Delete me";
-            Boolean edit = task.readyForDeletion(false);
-            task.toMap();
-            task = new Task(tName,tNote,edit,ID,FirebasePathVerify.pathCheck(tName));//create the task object
-            databaseReference.child(getIntent().getStringExtra("TaskName")).setValue(task);//re-write the firebase entry
+            Boolean edit = taskList.readyForDeletion(false);
+            taskList.toMap();
+            taskList = new TaskList(tName,tNote,edit,ID,FirebasePathVerify.pathCheck(tName));//create the taskList object
+            databaseReference.child(getIntent().getStringExtra("TaskName")).setValue(taskList);//re-write the firebase entry
             finish();
             return;
         }else if(!taskname.isEmpty()){
             //Log.d("editSaveTask", "saveTask: " +  taskname+ " " + tasknote+" "+ taskPath );
-            task = new Task();
-            String tName = task.setName(taskname);
-            String tNote = task.setNote(tasknote);
-            Boolean edit = task.readyForDeletion(false);
-            ID = task.setID(ID);
-            task.toMap();
-            task = new Task(tName,tNote,edit,ID,FirebasePathVerify.pathCheck(tName));//create the task object
-            databaseReference.child(getIntent().getStringExtra("TaskName")).setValue(task);//re-write the firebase entry
+            taskList = new TaskList();
+            String tName = taskList.setName(taskname);
+            String tNote = taskList.setNote(tasknote);
+            Boolean edit = taskList.readyForDeletion(false);
+            ID = taskList.setID(ID);
+            taskList.toMap();
+            taskList = new TaskList(tName,tNote,edit,ID,FirebasePathVerify.pathCheck(tName));//create the taskList object
+            databaseReference.child(getIntent().getStringExtra("TaskName")).setValue(taskList);//re-write the firebase entry
             finish();
         }
-        Toast.makeText(getApplicationContext(),"Task updated",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),"TaskList updated",Toast.LENGTH_SHORT).show();
     }
 
     @Override

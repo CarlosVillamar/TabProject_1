@@ -1,14 +1,14 @@
 package com.example.carlos.tabproject1;
 
-import android.app.Activity;
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.OnLifecycleEvent;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.OnLifecycleEvent;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -32,12 +32,12 @@ public class Tab2Fragment extends Fragment {
     /**The fragment argument representing the section number for this
      * fragment. Refer to Tab1Fragment class comments to understand how this class works.
      * Both classes are identical, we just refer to different firebase instances */
-    List<Task> taskArrayList;
+    List<TaskList> taskListArrayList;
     TabAdapter adapter;
     DatabaseReference databaseReference;
     RecyclerView recyclerView;
-    Task mTask;
-    Activity activity;
+    TaskList mTaskList;
+    AppCompatActivity activity;
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -63,12 +63,12 @@ public class Tab2Fragment extends Fragment {
         View v = inflater.inflate(R.layout.tab_fragment, container, false);
         recyclerView = v.findViewById(R.id.recycleView);
 
-        taskArrayList = new ArrayList<Task>();
+        taskListArrayList = new ArrayList<TaskList>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-        adapter = new TabAdapter(getContext(), taskArrayList, getString(R.string.tab_text_2));
+        adapter = new TabAdapter(getContext(), taskListArrayList, getString(R.string.tab_text_2));
         recyclerView.setAdapter(adapter);
 
         databaseReference = FirebaseDatabase.getInstance().getReference(getString(R.string.tab_text_2));
@@ -81,7 +81,7 @@ public class Tab2Fragment extends Fragment {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                taskArrayList.clear();
+                taskListArrayList.clear();
                 getAllTask(dataSnapshot);
                 Log.d(TAG, "onChildChanged: "+ s);
             }
@@ -119,7 +119,7 @@ public class Tab2Fragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                taskArrayList.clear();
+                taskListArrayList.clear();
                 for (DataSnapshot snap : dataSnapshot.getChildren()) {
                     Log.d(TAG, "onDataChange: " + snap);
                     getAllTask(snap);
@@ -137,8 +137,8 @@ public class Tab2Fragment extends Fragment {
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     public void clearList() {
         Log.d(TAG, "clearList: runs");
-        if (!taskArrayList.isEmpty()) {
-            taskArrayList.clear();
+        if (!taskListArrayList.isEmpty()) {
+            taskListArrayList.clear();
         }
     }
 
@@ -162,12 +162,12 @@ public class Tab2Fragment extends Fragment {
                 break;
             case R.id.menuDelete:
                 Toast.makeText(getContext(),"is it gone?",Toast.LENGTH_SHORT).show();
-                for(int i = 0; i<=taskArrayList.size()-1;i++){
-                    if (taskArrayList.get(i).canWeDelete()){
+                for(int i = 0; i<= taskListArrayList.size()-1; i++){
+                    if (taskListArrayList.get(i).canWeDelete()){
                         //TODO: figure out a way to do this with getID()
-                        mTask = taskArrayList.get(i);
-                        Log.d(TAG, "onOptionsItemSelected: " + mTask.getPathname());
-                        databaseReference.child(mTask.getPathname()).removeValue();
+                        mTaskList = taskListArrayList.get(i);
+                        Log.d(TAG, "onOptionsItemSelected: " + mTaskList.getPathname());
+                        databaseReference.child(mTaskList.getPathname()).removeValue();
                         adapter.notifyDataSetChanged();
                     }
                 }
@@ -188,8 +188,8 @@ public class Tab2Fragment extends Fragment {
         Boolean edit = data.getBooleanExtra("is this editable", false);
 
         if (requestCode == 1) {
-            mTask = new Task(s, v, edit, id, Path);
-            databaseReference.child(Path).setValue(mTask);//TODO:see options menu for delete
+            mTaskList = new TaskList(s, v, edit, id, Path);
+            databaseReference.child(Path).setValue(mTaskList);//TODO:see options menu for delete
 
             //as long as we make sure we have the right references we can just add it to the correct nesting tree
         } else if (requestCode == 0) {
@@ -199,9 +199,9 @@ public class Tab2Fragment extends Fragment {
     }
 
     private void getAllTask(DataSnapshot dataSnapshot) {
-        Task key = dataSnapshot.getValue(Task.class);
-        taskArrayList.add(key);
-        adapter = new TabAdapter(getContext(), taskArrayList, getString(R.string.tab_text_2));
+        TaskList key = dataSnapshot.getValue(TaskList.class);
+        taskListArrayList.add(key);
+        adapter = new TabAdapter(getContext(), taskListArrayList, getString(R.string.tab_text_2));
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 

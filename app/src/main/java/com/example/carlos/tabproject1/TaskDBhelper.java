@@ -15,7 +15,7 @@ public class TaskDBhelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     private static final String TABLE_NAME = "Todo List";
-    private static final String TODO_NAME = "task";
+    private static final String TODO_NAME = "taskList";
     private static final String TODO_NOTE = "note";
     private static final int TODO_ID = 0;
     private static final boolean TODO_EDITABLE = false;

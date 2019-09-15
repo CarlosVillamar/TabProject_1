@@ -19,7 +19,6 @@
 
     <!-- NOTE: This preference will be enabled only when the checkbox above is checked. -->
     <SwitchPreference
-        android:id="@+id/lowerSwitch"
         android:defaultValue="false"
         android:dependency="notifications_new_message"
         android:key="notifications_new_message_vibrate"

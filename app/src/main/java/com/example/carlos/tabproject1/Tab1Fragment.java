@@ -1,14 +1,14 @@
 package com.example.carlos.tabproject1;
 
-import android.app.Activity;
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.OnLifecycleEvent;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.OnLifecycleEvent;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -34,10 +34,10 @@ import static android.content.ContentValues.TAG;
  */
 public class Tab1Fragment extends Fragment {
     DatabaseReference databaseReference;
-    List<Task> taskArrayList = new ArrayList<>();
+    List<TaskList> taskListArrayList = new ArrayList<>();
     TabAdapter adapter;
-    Task mTask;
-    Activity activity = getActivity();
+    TaskList mTaskList;
+    FragmentActivity activity = getActivity();
     RecyclerView recyclerView;
 
 
@@ -51,7 +51,7 @@ public class Tab1Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);//make sure we recognize the add, delete and setting buttons on the action bar
-        taskArrayList = new ArrayList<Task>();//create the task list objects with a fixed size
+        taskListArrayList = new ArrayList<TaskList>();//create the taskList list objects with a fixed size
 
         // Inflate the layout for this fragment by setting the view the layout will live in
         View v = inflater.inflate(R.layout.tab_fragment, container, false);
@@ -62,7 +62,7 @@ public class Tab1Fragment extends Fragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
         //init and set our tab adapter to recognize what data it will render to the user
-        adapter = new TabAdapter(getContext(), taskArrayList, getString(R.string.tab_text_1));
+        adapter = new TabAdapter(getContext(), taskListArrayList, getString(R.string.tab_text_1));
         recyclerView.setAdapter(adapter);
 
         //pull the firebase database reference for this tab and its event listeners
@@ -75,7 +75,7 @@ public class Tab1Fragment extends Fragment {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                taskArrayList.clear();
+                taskListArrayList.clear();
                 getAllTask(dataSnapshot);
             }
 
@@ -121,8 +121,9 @@ public class Tab1Fragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //This method is called once with the initial value and again whenever data at this location is updated.
-                taskArrayList.clear();//ensure our fragments does not create duplicates
+                taskListArrayList.clear();//ensure our fragments does not create duplicates
                 for (DataSnapshot dSnap : dataSnapshot.getChildren()) {
+//                    Log.d("mehhhhh",dSnap.toString());
                     getAllTask(dSnap);
                 }
             }
@@ -140,8 +141,8 @@ public class Tab1Fragment extends Fragment {
     public void clearList() {
         //TODO:TEST CASE
         Log.d(TAG, "clearList: runs");
-        if (!taskArrayList.isEmpty()) {
-            taskArrayList.clear();
+        if (!taskListArrayList.isEmpty()) {
+            taskListArrayList.clear();
         }
     }
 
@@ -159,22 +160,22 @@ public class Tab1Fragment extends Fragment {
                 startActivity(settingsIntent);
                 break;
             case R.id.menuAddTask:
-                //make a call to AddActivity to add a task to the list
+                //make a call to AddActivity to add a taskList to the list
                 Intent intent = new Intent(getContext(), AddActivity.class);
                 intent.putExtra("TaskNumber", adapter.getItemCount() + 1);
                 startActivityForResult(intent, 1);
                 break;
             case R.id.menuDelete:
-                /**For our delete button we want to loop through the task list itself and check
+                /**For our delete button we want to loop through the taskList list itself and check
                  * which object is ready for deletion and remove them, and make sure the removal is
                  * reflected in the view itself*/
-                for(int i = 0; i<=taskArrayList.size()-1;i++){
-                    if (taskArrayList.get(i).canWeDelete()){
+                for(int i = 0; i<= taskListArrayList.size()-1; i++){
+                    if (taskListArrayList.get(i).canWeDelete()){
                         //TODO: figure out a way to do this with getID()
-                        mTask = taskArrayList.get(i);
-                        Log.d(TAG, "onOptionsItemSelected: node deleted" + mTask.getPathname());
-//                        Toast.makeText(getContext(),mTask.getID(),Toast.LENGTH_SHORT).show();
-                        databaseReference.child(mTask.getPathname()).removeValue();
+                        mTaskList = taskListArrayList.get(i);
+                        Log.d(TAG, "onOptionsItemSelected: node deleted" + mTaskList.getPathname());
+//                        Toast.makeText(getContext(),mTaskList.getID(),Toast.LENGTH_SHORT).show();
+                        databaseReference.child(mTaskList.getPathname()).removeValue();
                         adapter.notifyDataSetChanged();
                     }
                 }
@@ -191,7 +192,7 @@ public class Tab1Fragment extends Fragment {
         /**This override method is a will trigger when the explicit intent call to AddActivity is
          * complete.
          *
-         * We retrieve the data our intent call returns and create a new task object,
+         * We retrieve the data our intent call returns and create a new taskList object,
          * then we save the object in a new firebase entry*/
         String id = data.getStringExtra("ID");
         String v = data.getStringExtra("note");
@@ -200,8 +201,8 @@ public class Tab1Fragment extends Fragment {
         Boolean edit = data.getBooleanExtra("is this editable", false);
 
         if (requestCode == 1) {
-            mTask = new Task(s, v, edit, id, Path);
-            databaseReference.child(Path).setValue(mTask);//TODO:see options menu for delete
+            mTaskList = new TaskList(s, v, edit, id, Path);
+            databaseReference.child(Path).setValue(mTaskList);//TODO:see options menu for delete
             //as long as we make sure we have the right references we can just add it to the correct nesting tree
         } else if (requestCode == 0) {
             return;
@@ -209,12 +210,16 @@ public class Tab1Fragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
-    private void getAllTask(DataSnapshot dataSnapshot) {
-        /**This method will retreive all of our task objects from firebase, as them to our List
+    public void getAllTask(DataSnapshot dataSnapshot) {
+        /**This method will retreive all of our taskList objects from firebase, as them to our List
          * interface and make sure it all gets added to our view*/
-        Task key = dataSnapshot.getValue(Task.class);
-        taskArrayList.add(key);
-        adapter = new TabAdapter(getContext(), taskArrayList, getString(R.string.tab_text_1));
+        Log.d("mehhh",dataSnapshot.getValue().toString());
+
+        TaskList key = dataSnapshot.getValue(TaskList.class);
+        Log.d("keyzzz",key.toString());
+
+        taskListArrayList.add(key);
+        adapter = new TabAdapter(getContext(), taskListArrayList, getString(R.string.tab_text_1));
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 

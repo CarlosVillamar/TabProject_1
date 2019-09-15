@@ -3,7 +3,7 @@ package com.example.carlos.tabproject1;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,27 +19,15 @@ import java.util.List;
  */
 
 public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> {
-    private List<Task> taskList;
-    private Context context;
+    List<TaskList> taskList;
     private LayoutInflater layoutInflater;
     private String Tabname;
 
 
-    TabAdapter(List todo) {
-        context.getApplicationContext();
-        taskList = todo;
-    }
-
-    TabAdapter(Context context, List<Task> taskList,String tabname) {
+    TabAdapter(Context context, List<TaskList> taskList, String tabname) {
         // this.context = context;
         layoutInflater = LayoutInflater.from(context);
         this.Tabname = tabname;
-        this.taskList = taskList;
-    }
-
-    TabAdapter(Context context, List<Task> taskList) {
-        // this.context = context;
-        layoutInflater = LayoutInflater.from(context);
         this.taskList = taskList;
     }
 
@@ -55,19 +43,19 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final TabAdapter.ViewHolder holder, final int position) {
-        final Task task = taskList.get(position);
+        final TaskList taskList = this.taskList.get(position);
 
-        holder.bindTo(task);
-        holder.checkBox.setTag(taskList.get(position));
+        holder.bindTo(taskList);
+        holder.checkBox.setTag(this.taskList.get(position));
 
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (holder.checkBox.isChecked()) {
                     CheckBox cb = (CheckBox) buttonView;
-                    Task task2 = (Task) cb.getTag();
-                    task2.readyForDeletion(isChecked);
-//                    Toast.makeText(holder.checkBox.getContext(), task2.getName(), Toast.LENGTH_SHORT).show();
+                    TaskList taskList2 = (TaskList) cb.getTag();
+                    taskList2.readyForDeletion(isChecked);
+//                    Toast.makeText(holder.checkBox.getContext(), taskList2.getName(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -76,19 +64,19 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> {
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(),EditActivity.class);
                 intent.putExtra("Tabname",Tabname);
-                intent.putExtra("TaskName", task.getName());
-                intent.putExtra("TaskNote",task.getNote());
+                intent.putExtra("TaskName", taskList.getName());
+                intent.putExtra("TaskNote", taskList.getNote());
                 v.getContext().startActivity(intent);
 //                Log.d(TAG, "onCreateViewHolder: " + Tabname);
 //                Log.d(TAG, "onCreateViewHolder: " + p);
-//                Log.d(TAG, "onClick: "+ task.getName());
+//                Log.d(TAG, "onClick: "+ taskList.getName());
             }
         });
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                //TODO: consider using this input to give user the option to place task item in the top
-                Toast.makeText(holder.itemView.getContext(),task.getName(),Toast.LENGTH_LONG).show();
+                //TODO: consider using this input to give user the option to place taskList item in the top
+                Toast.makeText(holder.itemView.getContext(), taskList.getName(),Toast.LENGTH_LONG).show();
                 return true;
             }
         });
@@ -104,7 +92,7 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> {
         CheckBox checkBox;
         //implement click listener
         private TextView nameTV, noteTV;
-        private Task mTask;
+        private TaskList mTaskList;
         private TabAdapter adapter;
 
         public ViewHolder(View view, TabAdapter inflate) {
@@ -119,10 +107,10 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> {
 
         }
 
-        public void bindTo(Task task) {
-            nameTV.setText(task.getName());
-            noteTV.setText(task.getNote());
-            mTask = task;
+        public void bindTo(TaskList taskList) {
+            nameTV.setText(taskList.getName());
+            noteTV.setText(taskList.getNote());
+            mTaskList = taskList;
         }
     }
 }

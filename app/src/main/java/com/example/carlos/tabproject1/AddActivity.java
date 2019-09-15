@@ -2,8 +2,8 @@ package com.example.carlos.tabproject1;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,9 +19,9 @@ import java.util.UUID;
 * This activity allows us to add entries into our database for the current tab we have displayed
 */
 public class AddActivity extends AppCompatActivity implements View.OnKeyListener, TextWatcher {
-    //Task: whatever entries we use as a pathname for our nodes in firebase must not contain . # $ [ or ]
+    //TaskList: whatever entries we use as a pathname for our nodes in firebase must not contain . # $ [ or ]
 
-    Task task;
+    TaskList taskList;
     EditText nameEditText, notesEditText;
     FloatingActionButton addNoteBtn;
     String s, taskname,tasknote;
@@ -75,13 +75,13 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
             return;
         } else if(!taskname.isEmpty()){
             Log.d("yerrrrrr", "saveTask: taskname is not empty triggered");
-            task = new Task();
+            taskList = new TaskList();
 
-            String tName = task.setName(taskname);
-            String tNote = task.setNote(tasknote);
-            Boolean edit = task.readyForDeletion(false);
-            String ID = task.setID(UUID.randomUUID().toString());
-            task.toMap();
+            String tName = taskList.setName(taskname);
+            String tNote = taskList.setNote(tasknote);
+            Boolean edit = taskList.readyForDeletion(false);
+            String ID = taskList.setID(UUID.randomUUID().toString());
+            taskList.toMap();
 
             intent.putExtra("name", tName);
             intent.putExtra("note", tNote);

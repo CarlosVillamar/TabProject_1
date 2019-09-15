@@ -1,9 +1,7 @@
 package com.example.carlos.tabproject1;
 
-import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Toast;
 
 import static android.content.ContentValues.TAG;
 
@@ -19,7 +17,7 @@ public class FirebasePathVerify {
     }
 
     public static String pathCheck(String s) {
-        /**While the current project scope sets the task name as the pathname to retrieve object
+        /**While the current project scope sets the taskList name as the pathname to retrieve object
          * nodes, we must check for certain characters or conditions in order to meet firebase path
          * requirements*/
 
