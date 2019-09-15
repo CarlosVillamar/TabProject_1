@@ -2,8 +2,6 @@ package com.example.carlos.tabproject1;
 
 import android.content.Context;
 import android.content.Intent;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,17 +12,22 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.UUID;
-/**
-* This activity allows us to add entries into our database for the current tab we have displayed
-*/
-public class AddActivity extends AppCompatActivity implements View.OnKeyListener, TextWatcher {
-    //TaskList: whatever entries we use as a pathname for our nodes in firebase must not contain . # $ [ or ]
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-    TaskList taskList;
+import java.util.UUID;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+/**
+ * This activity allows us to add entries into our database for the current tab we have displayed
+ */
+public class AddActivity extends AppCompatActivity implements View.OnKeyListener, TextWatcher {
+    //TodoTask: whatever entries we use as a pathname for our nodes in firebase must not contain . # $ [ or ]
+
+    TodoTask todoTask;
     EditText nameEditText, notesEditText;
     FloatingActionButton addNoteBtn;
-    String s, taskname,tasknote;
+    String taskname, tasknote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +57,6 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
         });
 
 
-
     }
 
     public void saveTask() {
@@ -73,15 +75,15 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
 //            Log.d("yerrrrrr", "saveTask: taskname is empty triggered");
             finish();
             return;
-        } else if(!taskname.isEmpty()){
+        } else if (!taskname.isEmpty()) {
             Log.d("yerrrrrr", "saveTask: taskname is not empty triggered");
-            taskList = new TaskList();
+            todoTask = new TodoTask();
 
-            String tName = taskList.setName(taskname);
-            String tNote = taskList.setNote(tasknote);
-            Boolean edit = taskList.readyForDeletion(false);
-            String ID = taskList.setID(UUID.randomUUID().toString());
-            taskList.toMap();
+            String tName = todoTask.setName(taskname);
+            String tNote = todoTask.setNote(tasknote);
+            Boolean edit = todoTask.readyForDeletion(false);
+            String ID = todoTask.setID(UUID.randomUUID().toString());
+            todoTask.toMap();
 
             intent.putExtra("name", tName);
             intent.putExtra("note", tNote);

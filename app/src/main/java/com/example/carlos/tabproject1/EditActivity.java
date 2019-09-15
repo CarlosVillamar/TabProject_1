@@ -1,7 +1,6 @@
 package com.example.carlos.tabproject1;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -16,17 +15,19 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.UUID;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 /**
  * This activity allows us to edit an entry in it's corresponding tab
  * this class is very similar to the AddActivity class however this class will request the tabName from the TabAdpater
- *
+ * <p>
  * This class will get called via an intent that is called from the TabAdapter in order to read and write entries fromm the correct tab
  * It will receive an explicit intent call from said adapter in order to know which database instance to use.
- *
+ * <p>
  * However unlike AddActivity the firebase database entry will get set in this class
- * */
-public class EditActivity extends AppCompatActivity implements View.OnKeyListener ,TextWatcher {
-    TaskList taskList;
+ */
+public class EditActivity extends AppCompatActivity implements View.OnKeyListener, TextWatcher {
+    TodoTask todoTask;
     EditText nameEditText, notesEditText;
     Button doneBtn, cancelBtn;
     DatabaseReference databaseReference;
@@ -53,7 +54,7 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
         notesEditText.addTextChangedListener(this);
         notesEditText.setOnKeyListener(this);
 
-        /**unlike AddActivity we will load up the taskList name and its corresponding note data
+        /**unlike AddActivity we will load up the todoTask name and its corresponding note data
          * for the user to see what entry they are editing
          * */
         nameEditText.setText(getIntent().getStringExtra("TaskName"));
@@ -75,6 +76,7 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
             }
         });
     }
+
     public void saveTask() {
         Log.d("saveTask called", "saveTask: we made it ");
 
@@ -84,35 +86,35 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
 
         if (taskname == null || taskname.equals(" ")) {
             Toast.makeText(getBaseContext(), "Leave nothing Empty", Toast.LENGTH_SHORT).show();
-            taskList = new TaskList();
+            todoTask = new TodoTask();
             String tName = "Fix me";
             String tNote = "Delete me";
-            Boolean edit = taskList.readyForDeletion(false);
-            taskList.toMap();
-            taskList = new TaskList(tName,tNote,edit,ID,FirebasePathVerify.pathCheck(tName));//create the taskList object
-            databaseReference.child(getIntent().getStringExtra("TaskName")).setValue(taskList);//re-write the firebase entry
+            Boolean edit = todoTask.readyForDeletion(false);
+            todoTask.toMap();
+            todoTask = new TodoTask(tName, tNote, edit, ID, FirebasePathVerify.pathCheck(tName));//create the todoTask object
+            databaseReference.child(getIntent().getStringExtra("TaskName")).setValue(todoTask);//re-write the firebase entry
             finish();
             return;
-        }else if(!taskname.isEmpty()){
+        } else if (!taskname.isEmpty()) {
             //Log.d("editSaveTask", "saveTask: " +  taskname+ " " + tasknote+" "+ taskPath );
-            taskList = new TaskList();
-            String tName = taskList.setName(taskname);
-            String tNote = taskList.setNote(tasknote);
-            Boolean edit = taskList.readyForDeletion(false);
-            ID = taskList.setID(ID);
-            taskList.toMap();
-            taskList = new TaskList(tName,tNote,edit,ID,FirebasePathVerify.pathCheck(tName));//create the taskList object
-            databaseReference.child(getIntent().getStringExtra("TaskName")).setValue(taskList);//re-write the firebase entry
+            todoTask = new TodoTask();
+            String tName = todoTask.setName(taskname);
+            String tNote = todoTask.setNote(tasknote);
+            Boolean edit = todoTask.readyForDeletion(false);
+            ID = todoTask.setID(ID);
+            todoTask.toMap();
+            todoTask = new TodoTask(tName, tNote, edit, ID, FirebasePathVerify.pathCheck(tName));//create the todoTask object
+            databaseReference.child(getIntent().getStringExtra("TaskName")).setValue(todoTask);//re-write the firebase entry
             finish();
         }
-        Toast.makeText(getApplicationContext(),"TaskList updated",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "TodoTask updated", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            //We want to set the cursor to end to the taskname instead of positioning it behind the
-            //taskname
-            nameEditText.setSelection(nameEditText.length());
+        //We want to set the cursor to end to the taskname instead of positioning it behind the
+        //taskname
+        nameEditText.setSelection(nameEditText.length());
 
     }
 

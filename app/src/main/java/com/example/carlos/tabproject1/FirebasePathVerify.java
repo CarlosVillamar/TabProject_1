@@ -1,23 +1,24 @@
 package com.example.carlos.tabproject1;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 
 import static android.content.ContentValues.TAG;
 
-/**This a class created to act as a home for helper functions to meet certain firebase requirements
- *
+/**
+ * This a class created to act as a home for helper functions to meet certain firebase requirements
+ * <p>
  * This class will also house other helper functions as the scope of the application changes and
- * new requirements need to be met*/
+ * new requirements need to be met
+ */
 
 public class FirebasePathVerify {
-
+    //TODO: refactor this class into firebase utility
 
     FirebasePathVerify() {
     }
 
     public static String pathCheck(String s) {
-        /**While the current project scope sets the taskList name as the pathname to retrieve object
+        /**While the current project scope sets the todoTask name as the pathname to retrieve object
          * nodes, we must check for certain characters or conditions in order to meet firebase path
          * requirements*/
 
@@ -48,17 +49,18 @@ public class FirebasePathVerify {
                 }
 
             }
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
-                return s;
+        return s;
     }
-    public static String usernameVerify(String un){
+
+    public static String usernameVerify(String un) {
         //TODO: Come back to this during the firebase user authentication phase
         return un;
     }
 
-    public static String passwordVeirfy(String pw){
+    public static String passwordVeirfy(String pw) {
 
         return pw;
     }
