@@ -1,17 +1,16 @@
-package com.example.carlos.tabproject1;
+package com.example.carlos.tabproject1.activities;
 
 
 import android.os.Bundle;
 import android.view.Menu;
 
+import com.example.carlos.tabproject1.R;
+import com.example.carlos.tabproject1.views.SectionsPagerAdapter;
+import com.example.carlos.tabproject1.views.Tab2Fragment;
 import com.google.android.material.tabs.TabLayout;
-
-import java.util.ArrayList;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;

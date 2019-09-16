@@ -1,4 +1,4 @@
-package com.example.carlos.tabproject1;
+package com.example.carlos.tabproject1.models;
 
 public class TabNames {
     //getter and setter class for tab names for a future update

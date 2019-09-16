@@ -1,4 +1,4 @@
-package com.example.carlos.tabproject1;
+package com.example.carlos.tabproject1.activities;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -10,6 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.carlos.tabproject1.db.FirebasePathVerify;
+import com.example.carlos.tabproject1.R;
+import com.example.carlos.tabproject1.models.TodoTask;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 

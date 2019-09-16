@@ -1,4 +1,4 @@
-package com.example.carlos.tabproject1;
+package com.example.carlos.tabproject1.activities;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

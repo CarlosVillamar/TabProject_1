@@ -1,4 +1,4 @@
-package com.example.carlos.tabproject1;
+package com.example.carlos.tabproject1.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

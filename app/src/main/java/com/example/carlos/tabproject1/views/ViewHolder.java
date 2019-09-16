@@ -1,8 +1,11 @@
-package com.example.carlos.tabproject1;
+package com.example.carlos.tabproject1.views;
 
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
+
+import com.example.carlos.tabproject1.R;
+import com.example.carlos.tabproject1.models.TodoTask;
 
 import androidx.recyclerview.widget.RecyclerView;
 

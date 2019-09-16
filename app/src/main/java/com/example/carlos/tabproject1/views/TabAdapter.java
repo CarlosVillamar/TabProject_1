@@ -1,4 +1,4 @@
-package com.example.carlos.tabproject1;
+package com.example.carlos.tabproject1.views;
 
 
 import android.content.Context;
@@ -9,6 +9,10 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Toast;
+
+import com.example.carlos.tabproject1.R;
+import com.example.carlos.tabproject1.activities.EditActivity;
+import com.example.carlos.tabproject1.models.TodoTask;
 
 import java.util.List;
 
@@ -24,7 +28,7 @@ public class TabAdapter extends RecyclerView.Adapter<ViewHolder> {
     private String Tabname;
 
 
-    TabAdapter(Context context, List<TodoTask> todoTask, String tabname) {
+    public TabAdapter(Context context, List<TodoTask> todoTask, String tabname) {
         layoutInflater = LayoutInflater.from(context);
         this.Tabname = tabname;
         this.todoTask = todoTask;

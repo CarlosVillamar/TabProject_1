@@ -1,7 +1,9 @@
-package com.example.carlos.tabproject1;
+package com.example.carlos.tabproject1.db;
 
 import android.util.Log;
 
+import com.example.carlos.tabproject1.views.TabAdapter;
+import com.example.carlos.tabproject1.models.TodoTask;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,7 +27,7 @@ public class FirebaseUtility {
     TodoTask mTodoTask;
     RecyclerView recyclerView;
 
-    FirebaseUtility(List taskListArrayList, TabAdapter adapter, TodoTask mTodoTask, RecyclerView recyclerView, String tabName){
+    public FirebaseUtility(List taskListArrayList, TabAdapter adapter, TodoTask mTodoTask, RecyclerView recyclerView, String tabName){
         this.todoTaskListArray = taskListArrayList;
         this.adapter =adapter;
         this.mTodoTask = mTodoTask;

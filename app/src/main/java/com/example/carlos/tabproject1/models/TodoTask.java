@@ -1,4 +1,4 @@
-package com.example.carlos.tabproject1;
+package com.example.carlos.tabproject1.models;
 
 import com.google.firebase.database.Exclude;
 
@@ -10,12 +10,12 @@ import java.util.Map;
  * Created by Carlos on 4/30/2018.
  * this is a getter and setter class for each todoTask created
  */
-class TodoTask implements Serializable {
+public class TodoTask implements Serializable {
     public String name, note, ID, pathname;
 
     private boolean delete;
 
-    TodoTask() {//this class is needed for the database snapshots
+    public TodoTask() {//this class is needed for the database snapshots
     }
 
     public TodoTask(String name) {
@@ -43,22 +43,22 @@ class TodoTask implements Serializable {
         return ID;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
-    String getNote() {
+    public String getNote() {
         return note;
     }
 
-    String getPathname(){return pathname;}
+    public String getPathname(){return pathname;}
 
 
-    boolean canWeDelete() {
+    public boolean canWeDelete() {
         return delete;
     }
 
-    boolean readyForDeletion(boolean editable) {
+    public boolean readyForDeletion(boolean editable) {
         this.delete = editable;
         return editable;
     }

@@ -1,4 +1,4 @@
-package com.example.carlos.tabproject1;
+package com.example.carlos.tabproject1.activities;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -20,6 +20,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.example.carlos.tabproject1.R;
 
 import java.util.List;
 

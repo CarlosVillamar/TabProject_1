@@ -1,6 +1,8 @@
-package com.example.carlos.tabproject1;
+package com.example.carlos.tabproject1.views;
 
 import android.view.View;
+
+import com.example.carlos.tabproject1.R;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
