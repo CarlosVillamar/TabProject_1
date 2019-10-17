@@ -54,7 +54,6 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
             public void onClick(View v) {
                 saveTask();
                 v.getWindowToken();
-                finish();
             }
         });
 
@@ -67,16 +66,11 @@ public class AddActivity extends AppCompatActivity implements View.OnKeyListener
          * */
         Intent intent = getIntent();
 
-//        Log.d("saveTask called", "saveTask: we made it ");
         taskname = String.valueOf(nameEditText.getText());
         tasknote = String.valueOf(notesEditText.getText());
 
-        if (taskname == null || taskname.equals("")) {
+        if (taskname.isEmpty() || taskname.equals("")) {
             Toast.makeText(getBaseContext(), "Leave nothing Empty", Toast.LENGTH_SHORT).show();
-            setResult(0, intent);
-//            Log.d("yerrrrrr", "saveTask: taskname is empty triggered");
-            finish();
-            return;
         } else if (!taskname.isEmpty()) {
             Log.d("yerrrrrr", "saveTask: taskname is not empty triggered");
             todoTask = new TodoTask();

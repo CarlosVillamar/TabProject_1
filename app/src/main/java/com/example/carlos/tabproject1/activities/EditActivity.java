@@ -68,7 +68,7 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
             @Override
             public void onClick(View v) {
                 saveTask();
-                finish();
+//                finish();
             }
         });
         cancelBtn = findViewById(R.id.editCancel);
@@ -87,17 +87,9 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
         String tasknote = String.valueOf(notesEditText.getText());
         String ID = UUID.randomUUID().toString();
 
-        if (taskname == null || taskname.equals(" ")) {
-            Toast.makeText(getBaseContext(), "Leave nothing Empty", Toast.LENGTH_SHORT).show();
-            todoTask = new TodoTask();
-            String tName = "Fix me";
-            String tNote = "Delete me";
-            Boolean edit = todoTask.readyForDeletion(false);
-            todoTask.toMap();
-            todoTask = new TodoTask(tName, tNote, edit, ID, FirebasePathVerify.pathCheck(tName));//create the todoTask object
-            databaseReference.child(getIntent().getStringExtra("TaskName")).setValue(todoTask);//re-write the firebase entry
-            finish();
-            return;
+        if (taskname.isEmpty() || taskname.equals(" ")) {
+            Toast.makeText(getBaseContext(), "Do not leave task name empty try again", Toast.LENGTH_SHORT).show();
+
         } else if (!taskname.isEmpty()) {
             //Log.d("editSaveTask", "saveTask: " +  taskname+ " " + tasknote+" "+ taskPath );
             todoTask = new TodoTask();
@@ -106,7 +98,8 @@ public class EditActivity extends AppCompatActivity implements View.OnKeyListene
             Boolean edit = todoTask.readyForDeletion(false);
             ID = todoTask.setID(ID);
             todoTask.toMap();
-            todoTask = new TodoTask(tName, tNote, edit, ID, FirebasePathVerify.pathCheck(tName));//create the todoTask object
+            tName = FirebasePathVerify.pathCheck(tName);
+            todoTask = new TodoTask(tName, tNote, edit, ID, tName);//create the todoTask object
             databaseReference.child(getIntent().getStringExtra("TaskName")).setValue(todoTask);//re-write the firebase entry
             finish();
         }

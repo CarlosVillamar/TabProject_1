@@ -1,12 +1,7 @@
 package com.example.carlos.tabproject1.db;
 
-import android.util.Log;
-
-import static android.content.ContentValues.TAG;
-
 /**
  * This a class created to act as a home for helper functions to meet certain firebase requirements
- * <p>
  * This class will also house other helper functions as the scope of the application changes and
  * new requirements need to be met
  */
@@ -22,35 +17,17 @@ public class FirebasePathVerify {
          * nodes, we must check for certain characters or conditions in order to meet firebase path
          * requirements*/
 
-        Log.d(TAG, "pathCheck: s before loop" + s);
-        String newS = null;
+        String regex = "#$[].";
+
         //TODO:find more test cases for this method;
-        char[] charArr = new char[s.length()];
-        for (int j = 0; j < s.length(); j++) {
-            charArr[j] = s.charAt(j);
-            Log.d(TAG, "pathCheck: string length " + s.length() + " charArr " + charArr[j]);
-        }
-
         try {
+            if (s != null)
+                for (char c : regex.toCharArray())
+                    if (s.contains(String.valueOf(c)))
+                        s = s.replace(c, ' ');
 
-            if (s == null) {
-                s = "fix me";
-                Log.d(TAG, "pathCheck: " + s);
-                return s;
-            } else {
-
-//            Log.d(TAG, "pathCheck: charArr " + charArr);
-                for (char c : charArr) {
-                    Log.d(TAG, "pathCheck: C " + c);
-                    if (c == '.' || c == '$' || c == '#' || c == '[' || c == ']') {
-                        newS = s.replace(c, ' ');
-                        return newS;
-                    }
-                }
-
-            }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         return s;
     }

@@ -140,7 +140,7 @@ public class Tab2Fragment extends Fragment {
         Boolean edit = data.getBooleanExtra("is this editable", false);
 
         if (requestCode == 1) {
-            mTodoTask = new TodoTask(s, v, edit, id, Path);
+            mTodoTask = new TodoTask(Path, v, edit, id, Path);
             fireDB.getPath(Path, mTodoTask);
 
             //as long as we make sure we have the right references we can just add it to the correct nesting tree
