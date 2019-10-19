@@ -5,9 +5,9 @@
     android:background="#A9A9A9"
     tools:actionBarNavMode="list"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.example.carlos.tabproject1.Tab1Fragment">
+    tools:context="com.example.carlos.tabproject1.views.Tab1Fragment">
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycleView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

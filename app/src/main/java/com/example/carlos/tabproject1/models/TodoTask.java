@@ -1,27 +1,28 @@
-package com.example.carlos.tabproject1;
+package com.example.carlos.tabproject1.models;
 
 import com.google.firebase.database.Exclude;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by Carlos on 4/30/2018.
- * this is a getter and setter class for each task created
+ * this is a getter and setter class for each todoTask created
  */
-class Task {
-    private String name, note, ID, pathname;
+public class TodoTask implements Serializable {
+    public String name, note, ID, pathname;
 
     private boolean delete;
 
-    Task() {//this class is needed for the database snapshots
+    public TodoTask() {//this class is needed for the database snapshots
     }
 
-    public Task(String name) {
+    public TodoTask(String name) {
         this.name = name;
     }
 
-    public Task(String name, String notes, Boolean delete, String ID) {
+    public TodoTask(String name, String notes, Boolean delete, String ID) {
         this.ID = ID;
         this.name = name;
         this.note = notes;
@@ -29,7 +30,7 @@ class Task {
 
     }
 
-    public Task(String name, String notes, Boolean delete, String ID, String pathname) {
+    public TodoTask(String name, String notes, Boolean delete, String ID, String pathname) {
         this.ID = ID;
         this.pathname = pathname;
         this.name = name;
@@ -42,22 +43,22 @@ class Task {
         return ID;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
-    String getNote() {
+    public String getNote() {
         return note;
     }
 
-    String getPathname(){return pathname;}
+    public String getPathname(){return pathname;}
 
 
-    boolean canWeDelete() {
+    public boolean canWeDelete() {
         return delete;
     }
 
-    boolean readyForDeletion(boolean editable) {
+    public boolean readyForDeletion(boolean editable) {
         this.delete = editable;
         return editable;
     }
@@ -84,7 +85,7 @@ class Task {
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("id", ID);
-        result.put("Task Name", name);
+        result.put("TodoTask Name", name);
         result.put("Notes", note);
         result.put("canWeDelete", delete);
         return result;

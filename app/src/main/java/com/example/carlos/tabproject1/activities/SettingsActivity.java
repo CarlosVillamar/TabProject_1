@@ -1,4 +1,4 @@
-package com.example.carlos.tabproject1;
+package com.example.carlos.tabproject1.activities;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -12,18 +12,20 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.SwitchPreference;
-import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.preference.SwitchPreference;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
+import com.example.carlos.tabproject1.R;
+
 import java.util.List;
+
+import androidx.appcompat.app.ActionBar;
 
 import static android.content.ContentValues.TAG;
 
@@ -129,7 +131,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     }
 
     /**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
+     * Set up the {@link ActionBar}, if the API is available.
      */
     private void setupActionBar() {
         ActionBar actionBar = getSupportActionBar();
@@ -210,12 +212,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_notification);
             setHasOptionsMenu(true);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                SwitchPreference switchPreference =  new SwitchPreference(getContext());
-                if(switchPreference.isEnabled()){
-                    Toast.makeText(getContext(),"yerrrrrr",Toast.LENGTH_SHORT).show();
+                SwitchPreference switchPreference = new SwitchPreference(getContext());
+                if (switchPreference.isEnabled()) {
+                    Toast.makeText(getContext(), "yerrrrrr", Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "onCreate: hello");
-                }else{
-                    Toast.makeText(getContext(),"nayyyyy",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "nayyyyy", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -237,9 +239,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             return super.onOptionsItemSelected(item);
         }
 
-        public void switchOption(){
+        public void switchOption() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                Toast.makeText(getContext(),"wax on wax off",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "wax on wax off", Toast.LENGTH_SHORT).show();
             }
         }
     }
