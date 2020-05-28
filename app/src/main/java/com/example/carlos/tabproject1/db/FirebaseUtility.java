@@ -10,6 +10,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.LinkedList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -23,15 +25,16 @@ public class FirebaseUtility {
 
     DatabaseReference databaseReference;
     List<TodoTask> todoTaskListArray;
+    LinkedList<TodoTask> taskLinkedList = new LinkedList<>();
     TabAdapter adapter;
     TodoTask mTodoTask;
     RecyclerView recyclerView;
 
-    public FirebaseUtility(List taskListArrayList, TabAdapter adapter, TodoTask mTodoTask, RecyclerView recyclerView, String tabName){
-        this.todoTaskListArray = taskListArrayList;
+    public FirebaseUtility(LinkedList taskListList, TabAdapter adapter, TodoTask mTodoTask, RecyclerView recyclerView, String tabName){
+        this.todoTaskListArray = taskListList;
         this.adapter =adapter;
         this.mTodoTask = mTodoTask;
-        this. recyclerView = recyclerView;
+        this.recyclerView = recyclerView;
         this.databaseReference =  FirebaseDatabase.getInstance().getReference(tabName);
 
         getChildRef();
@@ -48,7 +51,7 @@ public class FirebaseUtility {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                todoTaskListArray.clear();
+                taskLinkedList.clear();
                 getAllTask(dataSnapshot);
 
             }
@@ -101,10 +104,11 @@ public class FirebaseUtility {
     public void getAllTask(DataSnapshot dataSnapshot) {
         /**This method will retreive all of our todoTask objects from firebase, as them to our List
          * interface and make sure it all gets added to our view*/
+        Log.d(TAG, "getAllTask: confirmed");
         TodoTask key = dataSnapshot.getValue(TodoTask.class);
-
+            
         todoTaskListArray.add(key);
-        adapter = new TabAdapter(recyclerView.getContext(), todoTaskListArray, "School Tasks");
+        adapter = new TabAdapter(recyclerView.getContext(), taskLinkedList, "School Tasks");
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }

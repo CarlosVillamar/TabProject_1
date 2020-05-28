@@ -14,6 +14,7 @@ import com.example.carlos.tabproject1.R;
 import com.example.carlos.tabproject1.activities.EditActivity;
 import com.example.carlos.tabproject1.models.TodoTask;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,12 +24,12 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 
 public class TabAdapter extends RecyclerView.Adapter<ViewHolder> {
-    List<TodoTask> todoTask;
+    LinkedList<TodoTask> todoTask;
     private LayoutInflater layoutInflater;
     private String Tabname;
 
 
-    public TabAdapter(Context context, List<TodoTask> todoTask, String tabname) {
+    public TabAdapter(Context context, LinkedList<TodoTask> todoTask, String tabname) {
         layoutInflater = LayoutInflater.from(context);
         this.Tabname = tabname;
         this.todoTask = todoTask;

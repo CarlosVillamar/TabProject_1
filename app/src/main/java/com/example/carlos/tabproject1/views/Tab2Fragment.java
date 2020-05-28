@@ -17,6 +17,7 @@ import com.example.carlos.tabproject1.db.FirebaseUtility;
 import com.example.carlos.tabproject1.models.TodoTask;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +37,7 @@ public class Tab2Fragment extends Fragment {
     AppCompatActivity activity;
     FirebaseUtility fireDB;
     List<TodoTask> todoTaskListArray;
+    LinkedList<TodoTask> todoTaskList = new LinkedList<>();
     TodoTask mTodoTask;
     TabAdapter adapter;
     RecyclerView recyclerView;
@@ -65,12 +67,12 @@ public class Tab2Fragment extends Fragment {
 
         todoTaskListArray = new ArrayList<TodoTask>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        adapter = new TabAdapter(getContext(), todoTaskListArray, getString(R.string.tab_text_2));
+        adapter = new TabAdapter(getContext(), todoTaskList, getString(R.string.tab_text_2));
 
         RecyclerViewHelper viewHelper = new RecyclerViewHelper(view,linearLayoutManager,adapter);
         recyclerView = viewHelper.getRecyclerView();
 
-        fireDB = new FirebaseUtility(todoTaskListArray,
+        fireDB = new FirebaseUtility(todoTaskList,
                 adapter, mTodoTask,recyclerView,"Personal");
 
         if (isDetached() || activity == null) {
@@ -113,10 +115,10 @@ public class Tab2Fragment extends Fragment {
                 break;
             case R.id.menuDelete:
                 Toast.makeText(getContext(), "is it gone?", Toast.LENGTH_SHORT).show();
-                for (int i = 0; i <= todoTaskListArray.size() - 1; i++) {
-                    if (todoTaskListArray.get(i).canWeDelete()) {
+                for (int i = 0; i <= todoTaskList.size() - 1; i++) {
+                    if (todoTaskList.get(i).canWeDelete()) {
                         //TODO: figure out a way to do this with getID()
-                        mTodoTask = todoTaskListArray.get(i);
+                        mTodoTask = todoTaskList.get(i);
                         Log.d(TAG, "onOptionsItemSelected: " + mTodoTask.getPathname());
 //                        databaseReference.child(mTodoTask.getPathname()).removeValue();
                         fireDB.removeNode(mTodoTask);

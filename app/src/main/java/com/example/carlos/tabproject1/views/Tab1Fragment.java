@@ -17,6 +17,7 @@ import com.example.carlos.tabproject1.db.FirebaseUtility;
 import com.example.carlos.tabproject1.models.TodoTask;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import androidx.fragment.app.Fragment;
@@ -31,6 +32,7 @@ public class Tab1Fragment extends Fragment {
     FragmentActivity activity = getActivity();
     FirebaseUtility fireDB;
     List<TodoTask> todoTaskListArray = new ArrayList<>();
+    LinkedList<TodoTask> todoTaskList = new LinkedList<>();
     TabAdapter adapter;
     TodoTask mTodoTask;
     RecyclerView recyclerView;
@@ -49,13 +51,13 @@ public class Tab1Fragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
         //init and set our tab adapter to recognize what data it will render to the user
-        adapter = new TabAdapter(getContext(), todoTaskListArray, getString(R.string.tab_text_1));
+        adapter = new TabAdapter(getContext(), todoTaskList, getString(R.string.tab_text_1));
 
         RecyclerViewHelper viewHelper = new RecyclerViewHelper(view,linearLayoutManager,adapter);
         recyclerView = viewHelper.getRecyclerView();
 
         //pull the firebase database reference for this tab and its event listeners
-        fireDB = new FirebaseUtility(todoTaskListArray,
+        fireDB = new FirebaseUtility(todoTaskList,
                 adapter, mTodoTask,recyclerView, "School Tasks");
 
         /**
@@ -111,10 +113,10 @@ public class Tab1Fragment extends Fragment {
                 /**For our delete button we want to loop through the todoTask list itself and check
                  * which object is ready for deletion and remove them, and make sure the removal is
                  * reflected in the view itself*/
-                for (int i = 0; i <= todoTaskListArray.size() - 1; i++) {
-                    if (todoTaskListArray.get(i).canWeDelete()) {
+                for (int i = 0; i <= todoTaskList.size() - 1; i++) {
+                    if (todoTaskList.get(i).canWeDelete()) {
                         //TODO: figure out a way to do this with getID()
-                        mTodoTask = todoTaskListArray.get(i);
+                        mTodoTask = todoTaskList.get(i);
                         fireDB.removeNode(mTodoTask);
                         adapter.notifyDataSetChanged();
 
